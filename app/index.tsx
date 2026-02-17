@@ -13,6 +13,7 @@ export default function Index() {
       }}
     >
       <Text style={{ color: colors.text }}>Welcome to the app!</Text>
+      <Text className="text-cyan-400">Hello</Text>
     </View>
   );
 }
