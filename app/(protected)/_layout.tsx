@@ -2,6 +2,10 @@ import { AuthContext } from "@/context/authContext";
 import { Redirect, Stack } from "expo-router";
 import { useContext } from "react";
 
+export const unstable_settings = {
+  initialRouteName: "(tabs)", // anchor
+};
+
 export default function ProtectedLayout() {
     const authState = useContext(AuthContext);
 
@@ -16,7 +20,11 @@ export default function ProtectedLayout() {
     return (
         <Stack>
             <Stack.Screen
-                options={{ headerShown: false }} />
+                name="(tabs)"
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack>
     )
 }
