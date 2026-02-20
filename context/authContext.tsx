@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SplashScreen, useRouter } from "expo-router";
+import * as SecureStore from 'expo-secure-store';
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 SplashScreen.preventAutoHideAsync();
@@ -11,7 +11,7 @@ type AuthState = {
     logOut: () => void;
 }
 
-const authStorageKey = "auth-key";
+const tokenKey = "access-token";
 
 export const AuthContext = createContext<AuthState>({
     isReady: false,
@@ -25,43 +25,30 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const router = useRouter();
 
-    const storeAuthState = async (newState: { isLoggedIn: boolean }) => { // this is where the access and refresh token should be stored as well
-        try {
-            const jsonValue = JSON.stringify(newState);
-            await AsyncStorage.setItem(authStorageKey, jsonValue);
-        } catch (error) {
-            console.log("Error saving: ", error);
-        }
-    }
-
-    const logIn = () => {
+    const logIn = async () => {
         setIsLoggedIn(true);
-        storeAuthState({ isLoggedIn: true });
+        await SecureStore.setItemAsync(tokenKey, "user-access-token-replace-me")
         router.replace("/");
     }
 
-    const logOut = () => {
+    const logOut = async () => {
         setIsLoggedIn(false);
-        storeAuthState({ isLoggedIn: false });
+        await SecureStore.deleteItemAsync(tokenKey);
         router.replace("/login");
     }
 
     useEffect(() => {
-        const getAuthFromStorage = async () => {
-            // simulate a delay, e.g. for an API request
-            // await new Promise((res) => setTimeout(() => res(null), 1000));
+        const restoreAuth = async () => {
             try {
-                const value = await AsyncStorage.getItem(authStorageKey);
-                if (value !== null) {
-                    const auth = JSON.parse(value);
-                    setIsLoggedIn(auth.isLoggedIn);
-                }
+                const token = await SecureStore.getItemAsync(tokenKey);
+                setIsLoggedIn(!!token);
             } catch (error) {
-                console.log("Error fetching from storage", error);
+                console.log("Error reading token", error);
             }
             setIsReady(true);
         };
-        getAuthFromStorage();
+
+        restoreAuth();
     }, []);
 
     useEffect(() => {

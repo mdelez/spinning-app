@@ -1,5 +1,3 @@
-// import { AppText } from "@/components/AppText";
-// import { Button } from "@/components/Button";
 import { AuthContext } from "@/context/authContext";
 import { useContext } from "react";
 import { Button, Text, View } from "react-native";
