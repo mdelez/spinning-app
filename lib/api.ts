@@ -17,7 +17,7 @@ export async function api<T>(
     ...(fetchOptions.headers || {}),
   };
 
-  console.log('fetch url: ', `${API_URL}${path}`)
+  // console.log('fetch url: ', `${API_URL}${path}`)
 
   if (requireAuth) {
     const token = await SecureStore.getItemAsync("access-token");
