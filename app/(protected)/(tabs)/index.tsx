@@ -1,19 +1,41 @@
-import { useTheme } from "@react-navigation/native";
-import { Text, View } from "react-native";
+import { ThemedText } from "@/components/ThemedText";
+import { useBookingsForUser } from "@/features/bookings/hooks/useBookings";
+import { FlatList, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-    const { colors } = useTheme();
+    const { data: bookings, isLoading, refetch, isFetching } = useBookingsForUser('3a8d5f62-1e4c-4c9d-a7b1-6f3e9d5c3333');
+    if (isLoading) {
+        return (
+            <SafeAreaView className="flex-1 justify-center items-center">
+                <ThemedText className="text-lg">Loading your sessions...</ThemedText>
+            </SafeAreaView>
+        );
+    }
+
     return (
-        <View
-            style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: colors.background
-            }}
-        >
-            <Text style={{ color: colors.text }}>Welcome to the app!</Text>
-            <Text className="text-cyan-400">Hello</Text>
-        </View>
+        <SafeAreaView className="flex-1">
+            <ThemedText className="text-2xl font-bold my-4 mx-4">
+                Your upcoming sessions
+            </ThemedText>
+
+            <FlatList
+                data={bookings}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <View className="justify-center items-center bg-green-400 rounded-xl p-4 m-4">
+                        <ThemedText color="#000" className="text-lg font-semibold mb-1">
+                            {item.session.name}
+                        </ThemedText>
+                        <ThemedText color="#000" className="text-base">
+                            Instructor: {item.session.instructor.firstName}
+                        </ThemedText>
+                    </View>
+                )}
+                refreshing={isFetching}
+                onRefresh={refetch}
+                contentContainerStyle={{ paddingBottom: 16, paddingHorizontal: 16 }}
+            />
+        </SafeAreaView>
     );
 }

@@ -1,5 +1,5 @@
-import { Bike, Session } from "@/features/sessions.types";
 import { api } from "@/lib/api";
+import { Bike, Session } from "@/types/spinning.types";
 
 export async function getSessions(): Promise<Session[]> {
   return api("/sessions");
@@ -13,7 +13,6 @@ export async function getAvailableBikeForSessionById(id: string): Promise<Bike[]
   return api(`/sessions/${id}/available-bikes`);
 }
 
-// Example: create a new session
 export async function createSession(sessionData: Partial<Session>): Promise<Session> {
   return api("/sessions", {
     method: "POST",
@@ -21,10 +20,9 @@ export async function createSession(sessionData: Partial<Session>): Promise<Sess
   });
 }
 
-// Example: update a session
 export async function updateSession(id: string, sessionData: Partial<Session>): Promise<Session> {
   return api(`/sessions/${id}`, {
-    method: "PUT",
+    method: "PATCH",
     body: JSON.stringify(sessionData),
   });
 }

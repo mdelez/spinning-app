@@ -1,4 +1,4 @@
-import { Bike, Session } from "@/features/sessions.types";
+import { Bike, Session } from "@/types/spinning.types";
 import { useQuery } from "@tanstack/react-query";
 import { getAvailableBikeForSessionById, getSessionById, getSessions } from "../services/sessions.api";
 
