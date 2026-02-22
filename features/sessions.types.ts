@@ -12,3 +12,8 @@ export interface Instructor {
   firstName: string;
   lastName: string;
 }
+
+export interface Bike {
+  id: string;
+  bikeNumber: number;
+}

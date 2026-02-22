@@ -1,4 +1,4 @@
-import { Session } from "@/features/sessions.types";
+import { Bike, Session } from "@/features/sessions.types";
 import { api } from "@/lib/api";
 
 export async function getSessions(): Promise<Session[]> {
@@ -7,6 +7,10 @@ export async function getSessions(): Promise<Session[]> {
 
 export async function getSessionById(id: string): Promise<Session> {
   return api(`/sessions/${id}`);
+}
+
+export async function getAvailableBikeForSessionById(id: string): Promise<Bike[]> {
+  return api(`/sessions/${id}/available-bikes`);
 }
 
 // Example: create a new session
