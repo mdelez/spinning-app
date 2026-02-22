@@ -1,9 +1,11 @@
 import { ThemedText } from "@/components/ThemedText";
 import { useSessions } from "@/features/sessions/hooks/useSessions";
-import { FlatList, View } from "react-native";
+import { useRouter } from "expo-router";
+import { FlatList, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Sessions() {
+    const router = useRouter();
     const { data, isLoading, refetch, isFetching } = useSessions();
 
     if (isLoading) {
@@ -24,11 +26,22 @@ export default function Sessions() {
                 data={data}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View className="bg-blue-200 rounded-xl p-4 m-4 justify-center items-center">
-                        <ThemedText color="#000" className="text-lg font-semibold mb-1">{item.name}</ThemedText>
-                        <ThemedText color="#000" className="text-base">{item.description}</ThemedText>
-                        <ThemedText color="#000" className="text-base">Instructor: {item.instructor.firstName}</ThemedText>
-                    </View>
+                    <Pressable
+                        onPress={() => router.push(`/sessions/${item.id}`)}
+                        className="bg-blue-200 rounded-xl p-4 m-4"
+                    >
+                        <View className="justify-center items-center">
+                            <ThemedText color="#000" className="text-lg font-semibold mb-1">
+                                {item.name}
+                            </ThemedText>
+                            <ThemedText color="#000" className="text-base">
+                                {item.description}
+                            </ThemedText>
+                            <ThemedText color="#000" className="text-base">
+                                Instructor: {item.instructor.firstName}
+                            </ThemedText>
+                        </View>
+                    </Pressable>
                 )}
                 refreshing={isFetching}
                 onRefresh={refetch}

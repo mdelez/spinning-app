@@ -28,7 +28,6 @@ export default function BottomTabsLayout() {
         options={{
           title: "Sessions",
           headerShown: false,
-          popToTopOnBlur: true,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="numeric-2-box-outline"
