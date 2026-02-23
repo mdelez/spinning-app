@@ -26,7 +26,7 @@ export function useCreateBooking() {
     onSuccess: (data) => {
       // invalidate bookings for that user
       queryClient.invalidateQueries({
-        queryKey: ["bookings-user", data.userId],
+        queryKey: ["bookings-user", data[0].userId],
       });
     },
   });

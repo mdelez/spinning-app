@@ -13,7 +13,8 @@ export async function getBookingById(id: string): Promise<Booking> {
     return api(`/bookings/${id}`);
 }
 
-export async function createBooking(bookingData: CreateBookingInput): Promise<Booking> {
+// returns array because user can bring a friend which will create two bookings
+export async function createBooking(bookingData: CreateBookingInput): Promise<Booking[]> {
     return api("/bookings", {
         method: "POST",
         body: JSON.stringify(bookingData),
