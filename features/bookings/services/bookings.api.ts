@@ -26,3 +26,9 @@ export async function updateBooking(id: string, bookingData: Partial<UpdateBooki
         body: JSON.stringify(bookingData),
     })
 }
+
+export async function deleteBooking(id: string): Promise<void> {
+    return api(`/bookings/${id}`, {
+        method: 'DELETE'
+    })
+}

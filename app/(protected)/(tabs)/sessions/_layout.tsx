@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 
 export default function SessionsLayout() {
   return (
-    <Stack>
+    <Stack screenOptions={{ headerBackButtonDisplayMode: 'minimal' }}>
       <Stack.Screen name="index" options={{ title: "Sessions", animation: "none", headerBackVisible: false, gestureEnabled: false }} />
       <Stack.Screen name="[id]" options={{ title: "Session Details" }} />
       <Stack.Screen name="[id]/book" options={{ title: "Book Session" }} />

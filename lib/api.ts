@@ -39,5 +39,10 @@ export async function api<T>(
     throw new Error(errorText || "API request failed");
   }
 
+  // only parse JSON if response has content
+  if (response.status === 204) {
+    return undefined as unknown as T; // explicitly return undefined for 204
+  }
+
   return response.json();
 }

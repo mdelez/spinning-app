@@ -5,11 +5,11 @@ import React from "react";
 export default function BottomTabsLayout() {
   return (
     <Tabs
-      screenOptions={{ tabBarActiveTintColor: "teal" }}
+      screenOptions={{ tabBarActiveTintColor: "teal", headerShown: false }}
       backBehavior="order"
     >
       <Tabs.Screen
-        name="index"
+        name="(bookings)"
         options={{
           title: "Bookings",
           headerShown: false,
