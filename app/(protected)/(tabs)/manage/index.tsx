@@ -3,7 +3,7 @@ import { AuthContext } from "@/context/authContext";
 import { useGetSessionsByInstructor } from "@/features/sessions/hooks/useSessions";
 import { Redirect, useRouter } from "expo-router";
 import { useContext } from "react";
-import { FlatList, Pressable, View } from "react-native";
+import { Button, FlatList, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Manage() {
@@ -29,6 +29,7 @@ export default function Manage() {
             <ThemedText className="text-2xl font-bold my-4 mx-4">
                 Manage your sessions
             </ThemedText>
+            <Button title="Create session" onPress={() => router.push('/manage/create')} />
 
             <FlatList
                 data={data}

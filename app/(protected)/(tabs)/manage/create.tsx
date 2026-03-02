@@ -1,19 +1,17 @@
 import { ThemedDateTimePicker } from "@/components/ThemedDatePicker";
 import { ThemedTextInput } from "@/components/ThemedInput";
 import { ThemedText } from "@/components/ThemedText";
-import { useDeleteSession, useGetSession, useUpdateSession } from "@/features/sessions/hooks/useSessions";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { AuthContext } from "@/context/authContext";
+import { useCreateSession } from "@/features/sessions/hooks/useSessions";
+import { useRouter } from "expo-router";
+import { useContext, useState } from "react";
 import { Alert, Button, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ManageSession() {
-    const { id } = useLocalSearchParams<{ id: string }>();
+export default function CreateSession() {
+    const { user } = useContext(AuthContext);
+    const createSession = useCreateSession();
     const router = useRouter();
-
-    const { data, isLoading } = useGetSession(id);
-    const updateSession = useUpdateSession();
-    const deleteSession = useDeleteSession();
 
     // TODO: add studio id
     const [sessionData, setSessionData] = useState({
@@ -23,64 +21,37 @@ export default function ManageSession() {
         endAt: new Date(),
     });
 
-    // TODO: prompt user on back navigation if unsaved changes exist
-    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-    // populate local state when session data loads
-    useEffect(() => {
-        if (data) {
-            setSessionData({
-                name: data.name,
-                description: data.description,
-                startAt: new Date(data.startAt),
-                endAt: new Date(data.endAt),
-            });
-        }
-    }, [data]);
-
-    if (isLoading) {
-        return (
-            <SafeAreaView className="flex-1 justify-center items-center">
-                <ThemedText className="text-lg">Loading session...</ThemedText>
-            </SafeAreaView>
-        );
-    }
-
     const handleSave = async () => {
         try {
-            await updateSession.mutateAsync({
-                id,
-                updateData: {
-                    ...sessionData,
-                    startAt: sessionData.startAt.toISOString(),
-                    endAt: sessionData.endAt.toISOString()
-                },
-            });
-            setHasUnsavedChanges(false);
-            Alert.alert("Saved!", "Your changes have been saved.");
-        } catch (error) {
-            console.log("Failed to save:", error);
-        }
-    };
-
-    const handleDelete = () => {
-        Alert.alert(
-            "Delete Session",
-            "Are you sure you want to delete this session?",
-            [
-                { text: "Cancel", style: "cancel" },
+            await createSession.mutateAsync({
+                ...sessionData,
+                startAt: sessionData.startAt.toISOString(),
+                endAt: sessionData.endAt.toISOString(),
+                instructorId: user!.id,
+                studioId: '2d7e4c91-3b5f-4a8a-8d1e-1f2a3b4c4444'
+            },
                 {
-                    text: "Delete",
-                    style: "destructive",
-                    onPress: () => {
-                        deleteSession.mutate({ sessionId: id, instructorId: data!.instructor.id }, {
-                            onSuccess: () => router.back(),
-                        });
-                    },
-                },
-            ]
-        );
-    };
+                    onSuccess: () => {
+                        Alert.alert(
+                            "Success!",
+                            "Your session has been created.",
+                            [
+                                {
+                                    text: "Okay",
+                                    style: 'default',
+                                    onPress: () => {
+                                        router.back();
+                                    },
+                                },
+                            ]
+                        );
+                    }
+                }
+            )
+        } catch (error) {
+            console.log("Failed to create session: ", error)
+        }
+    }
 
     return (
         <SafeAreaView className="flex-1 p-4">
@@ -91,7 +62,7 @@ export default function ManageSession() {
                     value={sessionData.name}
                     onChangeText={(text) => {
                         setSessionData((prev) => ({ ...prev, name: text }));
-                        setHasUnsavedChanges(true);
+                        // setHasUnsavedChanges(true);
                     }}
                     className="border p-2 mb-4 rounded"
                 />
@@ -102,7 +73,7 @@ export default function ManageSession() {
                     value={sessionData.description}
                     onChangeText={(text) => {
                         setSessionData((prev) => ({ ...prev, description: text }));
-                        setHasUnsavedChanges(true);
+                        // setHasUnsavedChanges(true);
                     }}
                     className="border p-2 mb-4 rounded"
                     multiline
@@ -131,7 +102,7 @@ export default function ManageSession() {
                                 prev.endAt.getMinutes()
                             ),
                         }));
-                        setHasUnsavedChanges(true);
+                        // setHasUnsavedChanges(true);
                     }}
                 />
 
@@ -143,7 +114,7 @@ export default function ManageSession() {
                     value={sessionData.startAt}
                     onChange={(date) => {
                         setSessionData((prev) => ({ ...prev, startAt: date }));
-                        setHasUnsavedChanges(true);
+                        // setHasUnsavedChanges(true);
                     }}
                 />
 
@@ -154,14 +125,13 @@ export default function ManageSession() {
                     value={sessionData.endAt}
                     onChange={(date) => {
                         setSessionData((prev) => ({ ...prev, endAt: date }));
-                        setHasUnsavedChanges(true);
+                        // setHasUnsavedChanges(true);
                     }}
                 />
 
                 {/* Buttons */}
                 <View className="flex-row justify-between mt-4">
-                    <Button title="Delete Session" color="red" onPress={handleDelete} />
-                    <Button title="Save Changes" onPress={handleSave} />
+                    <Button title="Create session" onPress={handleSave} />
                 </View>
             </ScrollView>
         </SafeAreaView>

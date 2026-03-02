@@ -5,6 +5,7 @@ export default function ManageLayout() {
     <Stack screenOptions={{ headerBackButtonDisplayMode: 'minimal' }}>
       <Stack.Screen name="index" options={{ title: "Manage", animation: "none", headerBackVisible: false, gestureEnabled: false }} />
       <Stack.Screen name="[id]" options={{ title: "Manage sessions" }} />
+      <Stack.Screen name="create" options={{ title: "Create session" }} />
     </Stack>
   );
 }
