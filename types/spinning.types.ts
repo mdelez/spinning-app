@@ -19,6 +19,22 @@ export interface Session {
   instructor: Instructor;
 }
 
+export interface CreateSessionInput {
+  name: string;
+  startAt: string;
+  endAt: string;
+  description: string;
+  instructor: Instructor;
+}
+
+export type UpdateSessionInput = Partial<{
+  name?: string;
+  startAt?: string;
+  endAt?: string;
+  description?: string;
+  instructor?: Instructor;
+}>
+
 export interface Instructor {
   id: string;
   firstName: string;

@@ -1,15 +1,15 @@
-import { Bike, Session } from "@/types/spinning.types";
-import { useQuery } from "@tanstack/react-query";
-import { getAvailableBikeForSessionById, getSessionById, getSessions } from "../services/sessions.api";
+import { Bike, Session, UpdateSessionInput } from "@/types/spinning.types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createSession, deleteSession, getAvailableBikeForSessionById, getSessionById, getSessions, getSessionsByInstructor, updateSession } from "../services/sessions.api";
 
-export function useSessions() {
+export function useGetSessions() {
   return useQuery<Session[]>({
     queryKey: ["sessions"],
     queryFn: getSessions,
   });
 }
 
-export function useSession(id: string) {
+export function useGetSession(id: string) {
   return useQuery<Session>({
     queryKey: ["sessions", id],
     queryFn: () => getSessionById(id),
@@ -17,10 +17,73 @@ export function useSession(id: string) {
   });
 }
 
-export function useGetAvailableBikes(id: string) {
+export function useGetSessionsByInstructor(instructorId: string) {
+  return useQuery<Session[]>({
+    queryKey: ["sessions-instructor", instructorId],
+    queryFn: () => getSessionsByInstructor(instructorId),
+    enabled: !!instructorId
+  });
+}
+
+export function useGetAvailableBikesForSession(id: string) {
   return useQuery<Bike[]>({
     queryKey: ["sessions", id, "available-bikes"],
     queryFn: () => getAvailableBikeForSessionById(id),
     enabled: !!id, // only run if id exists
+  });
+}
+
+export function useCreateSession() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createSession,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['sessions-instructor', data.instructor.id]
+      })
+    }
+  })
+}
+
+export function useUpdateSession() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, updateData }: { id: string; updateData: UpdateSessionInput }) => updateSession(id, updateData),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['sessions-instructor', data.instructor.id]
+      });
+    },
+  });
+}
+
+export function useDeleteSession() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ sessionId }: { sessionId: string; instructorId: string }) => deleteSession(sessionId),
+    onMutate: async ({ sessionId, instructorId }) => {
+      await queryClient.cancelQueries({ queryKey: ["sessions-instructor", instructorId] });
+
+      const previous = queryClient.getQueryData<Session[]>(["sessions-instructor", instructorId]);
+
+      queryClient.setQueryData<Session[]>(["sessions-instructor", instructorId], (old) =>
+        old?.filter((session) => session.id !== sessionId)
+      );
+
+      return { previous };
+    },
+    onError: (_err, variables, context) => {
+      const { instructorId } = variables;
+      if (context?.previous) {
+        queryClient.setQueryData(["sessions-instructor", instructorId], context.previous);
+      }
+    },
+    onSuccess: (_data, variables) => {
+      const { instructorId } = variables;
+      queryClient.invalidateQueries({ queryKey: ["sessions-instructor", instructorId] });
+    },
   });
 }

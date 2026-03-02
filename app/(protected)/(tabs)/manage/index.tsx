@@ -1,12 +1,20 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useGetSessions } from "@/features/sessions/hooks/useSessions";
-import { useRouter } from "expo-router";
+import { AuthContext } from "@/context/authContext";
+import { useGetSessionsByInstructor } from "@/features/sessions/hooks/useSessions";
+import { Redirect, useRouter } from "expo-router";
+import { useContext } from "react";
 import { FlatList, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Sessions() {
+export default function Manage() {
     const router = useRouter();
-    const { data, isLoading, refetch, isFetching } = useGetSessions();
+    const { user } = useContext(AuthContext);
+    const { data, isLoading, refetch, isFetching } = useGetSessionsByInstructor(user!.id);
+
+    if (user?.role !== "INSTRUCTOR") {
+        return <Redirect href="/" />;
+    }
+
 
     if (isLoading) {
         return (
@@ -19,7 +27,7 @@ export default function Sessions() {
     return (
         <SafeAreaView className="flex-1">
             <ThemedText className="text-2xl font-bold my-4 mx-4">
-                Browse available sessions
+                Manage your sessions
             </ThemedText>
 
             <FlatList
@@ -27,7 +35,7 @@ export default function Sessions() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <Pressable
-                        onPress={() => router.push(`/sessions/${item.id}`)}
+                        onPress={() => router.push(`/manage/${item.id}`)}
                         className="bg-blue-200 rounded-xl p-4 m-4"
                     >
                         <View className="justify-center items-center">

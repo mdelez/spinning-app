@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useGetAvailableBikes } from "@/features/sessions/hooks/useSessions";
+import { useGetAvailableBikesForSession } from "@/features/sessions/hooks/useSessions";
 import { Picker } from '@react-native-picker/picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Book() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
-    const { data: bikes } = useGetAvailableBikes(id);
+    const { data: bikes } = useGetAvailableBikesForSession(id);
 
     const [selectedBikeId, setSelectedBikeId] = useState<string | null>(null);
 

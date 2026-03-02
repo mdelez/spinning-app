@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useSession } from "@/features/sessions/hooks/useSessions";
+import { useGetSession } from "@/features/sessions/hooks/useSessions";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Details() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
-    const { data, isLoading } = useSession(id);
+    const { data, isLoading } = useGetSession(id);
     // console.log(data);
 
     const start = new Date(data?.startAt ?? new Date());
