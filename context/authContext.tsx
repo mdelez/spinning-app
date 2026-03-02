@@ -54,7 +54,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
         setUser(fetchedUser);
         setIsLoggedIn(true);
 
-        await SecureStore.setItemAsync(tokenKey, "user-access-token-replace-me");
+        await SecureStore.setItemAsync(
+            tokenKey,
+            JSON.stringify({ role })
+        );
 
         router.replace("/");
     };
@@ -66,16 +69,40 @@ export function AuthProvider({ children }: PropsWithChildren) {
         router.replace("/login");
     }
 
-    // TODO: also restore user by calling endpoint with token info
+    // TODO: restore user by calling endpoint with token info
     useEffect(() => {
         const restoreAuth = async () => {
             try {
                 const token = await SecureStore.getItemAsync(tokenKey);
-                setIsLoggedIn(!!token);
+
+                if (!token) {
+                    setIsLoggedIn(false);
+                    setUser(null);
+                    return;
+                }
+
+                const parsed = JSON.parse(token);
+                const role = parsed.role as Role;
+
+                const found = users.find(u => u.role === role);
+                if (!found) {
+                    setIsLoggedIn(false);
+                    setUser(null);
+                    return;
+                }
+
+                const fetchedUser = await getUserById(found.id);
+
+                setUser(fetchedUser);
+                setIsLoggedIn(true);
+
             } catch (error) {
-                console.log("Error reading token", error);
+                console.log("Error restoring auth", error);
+                setIsLoggedIn(false);
+                setUser(null);
+            } finally {
+                setIsReady(true);
             }
-            setIsReady(true);
         };
 
         restoreAuth();
