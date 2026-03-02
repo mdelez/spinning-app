@@ -1,3 +1,15 @@
+export type Role = "USER" | "INSTRUCTOR" | "ADMIN";
+
+export interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: Role;
+  dateOfBirth: Date;
+  shoeSize: number;
+}
+
 export interface Session {
   id: string;
   name: string;

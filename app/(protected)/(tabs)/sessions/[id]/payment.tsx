@@ -1,10 +1,13 @@
 import { ThemedText } from "@/components/ThemedText";
+import { AuthContext } from "@/context/authContext";
 import { useCreateBooking } from "@/features/bookings/hooks/useBookings";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useContext } from "react";
 import { Button, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Payment() {
+    const { user } = useContext(AuthContext);
     const { id: sessionId, bikeId } = useLocalSearchParams<{ id: string; bikeId: string }>();
     const router = useRouter();
 
@@ -13,7 +16,7 @@ export default function Payment() {
     const handlePayment = () => {
         mutate(
             {
-                userId: '3a8d5f62-1e4c-4c9d-a7b1-6f3e9d5c3333',
+                userId: user!.id,
                 sessionId,
                 userBikeId: bikeId,
                 paid: true

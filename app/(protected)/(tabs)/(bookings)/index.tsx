@@ -1,7 +1,9 @@
 import { ThemedText } from "@/components/ThemedText";
+import { AuthContext } from "@/context/authContext";
 import { useBookingsForUser } from "@/features/bookings/hooks/useBookings";
 import { Booking } from "@/types/spinning.types";
 import { useRouter } from "expo-router";
+import { useContext } from "react";
 import { Pressable, SectionList, useColorScheme, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -57,7 +59,8 @@ function BookingCard({ item, onPress }: { item: Booking; onPress: () => void }) 
 }
 
 export default function Bookings() {
-    const { data: bookings, isLoading, refetch, isFetching } = useBookingsForUser("3a8d5f62-1e4c-4c9d-a7b1-6f3e9d5c3333");
+    const { user } = useContext(AuthContext);
+    const { data: bookings, isLoading, refetch, isFetching } = useBookingsForUser(user!.id);
     const router = useRouter();
 
     if (isLoading) {

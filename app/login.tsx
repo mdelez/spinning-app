@@ -8,7 +8,9 @@ export default function LoginScreen() {
     return (
         <View className="flex-1 justify-center p-4">
             <Text>Login</Text>
-            <Button title="Log in!" onPress={authContext.logIn} />
+            <Button title="Log in as rider" onPress={() => authContext.logIn('USER')} />
+            <Button title="Log in as instructor" onPress={() => authContext.logIn('INSTRUCTOR')} />
+            <Button title="Log in as admin" onPress={() => authContext.logIn('ADMIN')} />
         </View>
     );
 }
