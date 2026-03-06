@@ -44,7 +44,7 @@ export default function BottomTabsLayout() {
         name="manage"
         options={{
           title: "Manage",
-          href: user?.role === 'INSTRUCTOR' ? "/manage" : null,
+          href: (user?.role === 'INSTRUCTOR' || user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") ? "/manage" : null,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="numeric-3-box-outline"
@@ -60,7 +60,7 @@ export default function BottomTabsLayout() {
           title: "Account",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
-              name={user?.role === 'INSTRUCTOR' ? "numeric-4-box-outline" : "numeric-3-box-outline"}
+              name={(user?.role === 'INSTRUCTOR' || user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") ? "numeric-4-box-outline" : "numeric-3-box-outline"}
               size={size}
               color={color}
             />

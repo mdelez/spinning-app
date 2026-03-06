@@ -1,6 +1,7 @@
 import { ThemedText } from "@/components/ThemedText";
 import { AuthContext } from "@/context/authContext";
-import { useGetSessionsByInstructor } from "@/features/sessions/hooks/useSessions";
+import { useGetSessions } from "@/features/sessions/hooks/useSessions";
+import Feather from '@expo/vector-icons/Feather';
 import { Redirect, useRouter } from "expo-router";
 import { useContext } from "react";
 import { Button, FlatList, Pressable, View } from "react-native";
@@ -9,9 +10,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Manage() {
     const router = useRouter();
     const { user } = useContext(AuthContext);
-    const { data, isLoading, refetch, isFetching } = useGetSessionsByInstructor(user!.id);
+    const isAdmin = user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
+    const { data, isLoading, refetch, isFetching } = useGetSessions(
+        isAdmin ? undefined : { instructorId: user!.id }
+    );
 
-    if (user?.role !== "INSTRUCTOR") {
+    if (user?.role === "USER") {
         return <Redirect href="/" />;
     }
 
@@ -29,17 +33,17 @@ export default function Manage() {
             <ThemedText className="text-2xl font-bold my-4 mx-4">
                 Manage your sessions
             </ThemedText>
-            <Button title="Create session" onPress={() => router.push('/manage/create')} />
+
+            {isAdmin && (
+                <Button title="Create session" onPress={() => router.push('/manage/create')} />
+            )}
 
             <FlatList
                 data={data}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <Pressable
-                        onPress={() => router.push(`/manage/${item.id}`)}
-                        className="bg-blue-200 rounded-xl p-4 m-4"
-                    >
-                        <View className="justify-center items-center">
+                    <View className="flex-row justify-between bg-blue-200 rounded-xl p-4 m-4">
+                        <View className="flex-1 pr-4">
                             <ThemedText color="#000" className="text-lg font-semibold mb-1">
                                 {item.name}
                             </ThemedText>
@@ -50,7 +54,21 @@ export default function Manage() {
                                 Instructor: {item.instructor.firstName}
                             </ThemedText>
                         </View>
-                    </Pressable>
+                        <View className={isAdmin ? "justify-between" : "justify-center"}>
+                            <Pressable
+                                onPress={() => router.push(`/manage/${item.id}/checkIn`)}
+                            >
+                                <Feather name="check-square" size={24} color="black" />
+                            </Pressable>
+                            {isAdmin && (
+                                <Pressable
+                                    onPress={() => router.push(`/manage/${item.id}/edit`)}
+                                >
+                                    <Feather name="edit" size={24} color="black" />
+                                </Pressable>
+                            )}
+                        </View>
+                    </View>
                 )}
                 refreshing={isFetching}
                 onRefresh={refetch}

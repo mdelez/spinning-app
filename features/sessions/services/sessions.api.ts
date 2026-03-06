@@ -1,8 +1,12 @@
 import { api } from "@/lib/api";
 import { Bike, CreateSessionInput, Session, UpdateSessionInput } from "@/types/spinning.types";
 
-export async function getSessions(): Promise<Session[]> {
-  return api("/sessions");
+export async function getGetSessions(params?: { instructorId: string }): Promise<Session[]> {
+  if (!params) {
+    return api("/sessions");
+  } else {
+    return api(`/sessions?instructorId=${params.instructorId}`)
+  }
 }
 
 export async function getSessionById(id: string): Promise<Session> {

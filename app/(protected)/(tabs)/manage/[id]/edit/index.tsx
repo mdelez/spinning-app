@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Alert, Button, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ManageSession() {
+export default function EditSession() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
 

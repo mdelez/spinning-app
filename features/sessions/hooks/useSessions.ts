@@ -1,11 +1,11 @@
 import { Bike, Session, UpdateSessionInput } from "@/types/spinning.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createSession, deleteSession, getAvailableBikeForSessionById, getSessionById, getSessions, getSessionsByInstructor, updateSession } from "../services/sessions.api";
+import { createSession, deleteSession, getAvailableBikeForSessionById, getGetSessions, getSessionById, updateSession } from "../services/sessions.api";
 
-export function useGetSessions() {
+export function useGetSessions(params?: { instructorId: string }) {
   return useQuery<Session[]>({
-    queryKey: ["sessions"],
-    queryFn: getSessions,
+    queryKey: ["sessions", params],
+    queryFn: () => getGetSessions(params),
   });
 }
 
@@ -17,13 +17,13 @@ export function useGetSession(id: string) {
   });
 }
 
-export function useGetSessionsByInstructor(instructorId: string) {
-  return useQuery<Session[]>({
-    queryKey: ["sessions-instructor", instructorId],
-    queryFn: () => getSessionsByInstructor(instructorId),
-    enabled: !!instructorId
-  });
-}
+// export function useGetSessionsByInstructor(instructorId: string) {
+//   return useQuery<Session[]>({
+//     queryKey: ["sessions-instructor", instructorId],
+//     queryFn: () => getSessionsByInstructor(instructorId),
+//     enabled: !!instructorId
+//   });
+// }
 
 export function useGetAvailableBikesForSession(id: string) {
   return useQuery<Bike[]>({
