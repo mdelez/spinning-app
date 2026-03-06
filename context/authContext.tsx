@@ -1,4 +1,4 @@
-import { getUserById } from "@/features/user/services/user.api";
+import { getUserById } from "@/features/user/services/users.api";
 import { SplashScreen, useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
 import { createContext, PropsWithChildren, useEffect, useState } from "react";

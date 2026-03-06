@@ -17,6 +17,7 @@ export interface Session {
   endAt: string;
   description: string;
   instructor: Instructor;
+  studio: Studio;
 }
 
 export interface CreateSessionInput {
@@ -34,6 +35,7 @@ export type UpdateSessionInput = Partial<{
   endAt?: string;
   description?: string;
   instructor?: Instructor;
+  studioId?: string;
 }>
 
 export interface Instructor {
@@ -85,3 +87,8 @@ export type UpdateBookingInput = Partial<{
   friendWaiverSigned?: boolean;
   paid?: boolean;
 }>;
+
+export interface Studio {
+  id: string;
+  name: string;
+}

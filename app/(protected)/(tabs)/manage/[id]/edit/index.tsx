@@ -2,6 +2,9 @@ import { ThemedDateTimePicker } from "@/components/ThemedDatePicker";
 import { ThemedTextInput } from "@/components/ThemedInput";
 import { ThemedText } from "@/components/ThemedText";
 import { useDeleteSession, useGetSession, useUpdateSession } from "@/features/sessions/hooks/useSessions";
+import { useGetStudios } from "@/features/studios/hooks/useStudios";
+import { useGetInstructors } from "@/features/user/hooks/useUsers";
+import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Button, ScrollView, View } from "react-native";
@@ -11,6 +14,8 @@ export default function EditSession() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
 
+    const { data: instructors } = useGetInstructors();
+    const { data: studios } = useGetStudios();
     const { data, isLoading } = useGetSession(id);
     const updateSession = useUpdateSession();
     const deleteSession = useDeleteSession();
@@ -19,6 +24,8 @@ export default function EditSession() {
     const [sessionData, setSessionData] = useState({
         name: "",
         description: "",
+        instructorId: "",
+        studioId: "",
         startAt: new Date(),
         endAt: new Date(),
     });
@@ -32,6 +39,8 @@ export default function EditSession() {
             setSessionData({
                 name: data.name,
                 description: data.description,
+                instructorId: data.instructor.id,
+                studioId: data.studio.id,
                 startAt: new Date(data.startAt),
                 endAt: new Date(data.endAt),
             });
@@ -157,6 +166,42 @@ export default function EditSession() {
                         setHasUnsavedChanges(true);
                     }}
                 />
+
+                {/* Studio */}
+                <Picker
+                    selectedValue={sessionData.studioId}
+                    onValueChange={(itemValue) => setSessionData({
+                        ...sessionData,
+                        studioId: itemValue
+                    })}
+                >
+                    <Picker.Item label="Select a studio" value={null} />
+                    {studios?.map((studio) => (
+                        <Picker.Item
+                            key={studio.id}
+                            label={studio.name}
+                            value={studio.id}
+                        />
+                    ))}
+                </Picker>
+
+                {/* Instructor */}
+                <Picker
+                    selectedValue={sessionData.instructorId}
+                    onValueChange={(itemValue) => setSessionData({
+                        ...sessionData,
+                        instructorId: itemValue
+                    })}
+                >
+                    <Picker.Item label="Select an instructor" value={null} />
+                    {instructors?.map((instructor) => (
+                        <Picker.Item
+                            key={instructor.id}
+                            label={`${instructor.firstName} ${instructor.lastName}`}
+                            value={instructor.id}
+                        />
+                    ))}
+                </Picker>
 
                 {/* Buttons */}
                 <View className="flex-row justify-between mt-4">

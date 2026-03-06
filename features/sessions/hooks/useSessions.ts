@@ -11,7 +11,7 @@ export function useGetSessions(params?: { instructorId: string }) {
 
 export function useGetSession(id: string) {
   return useQuery<Session>({
-    queryKey: ["sessions", id],
+    queryKey: ["session", id],
     queryFn: () => getSessionById(id),
     enabled: !!id, // only run if id exists
   });

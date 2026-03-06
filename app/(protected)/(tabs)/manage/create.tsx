@@ -1,15 +1,18 @@
 import { ThemedDateTimePicker } from "@/components/ThemedDatePicker";
 import { ThemedTextInput } from "@/components/ThemedInput";
 import { ThemedText } from "@/components/ThemedText";
-import { AuthContext } from "@/context/authContext";
 import { useCreateSession } from "@/features/sessions/hooks/useSessions";
+import { useGetStudios } from "@/features/studios/hooks/useStudios";
+import { useGetInstructors } from "@/features/user/hooks/useUsers";
+import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Alert, Button, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreateSession() {
-    const { user } = useContext(AuthContext);
+    const { data: instructors } = useGetInstructors();
+    const { data: studios } = useGetStudios();
     const createSession = useCreateSession();
     const router = useRouter();
 
@@ -17,6 +20,8 @@ export default function CreateSession() {
     const [sessionData, setSessionData] = useState({
         name: "",
         description: "",
+        instructorId: "",
+        studioId: "",
         startAt: new Date(),
         endAt: new Date(),
     });
@@ -27,8 +32,8 @@ export default function CreateSession() {
                 ...sessionData,
                 startAt: sessionData.startAt.toISOString(),
                 endAt: sessionData.endAt.toISOString(),
-                instructorId: user!.id,
-                studioId: '2d7e4c91-3b5f-4a8a-8d1e-1f2a3b4c4444'
+                instructorId: sessionData.instructorId,
+                studioId: sessionData.studioId
             },
                 {
                     onSuccess: () => {
@@ -128,6 +133,42 @@ export default function CreateSession() {
                         // setHasUnsavedChanges(true);
                     }}
                 />
+
+                {/* Studio */}
+                <Picker
+                    selectedValue={sessionData.studioId}
+                    onValueChange={(itemValue) => setSessionData({
+                        ...sessionData,
+                        studioId: itemValue
+                    })}
+                >
+                    <Picker.Item label="Select a studio" value={null} />
+                    {studios?.map((studio) => (
+                        <Picker.Item
+                            key={studio.id}
+                            label={studio.name}
+                            value={studio.id}
+                        />
+                    ))}
+                </Picker>
+
+                {/* Instructor */}
+                <Picker
+                    selectedValue={sessionData.instructorId}
+                    onValueChange={(itemValue) => setSessionData({
+                        ...sessionData,
+                        instructorId: itemValue
+                    })}
+                >
+                    <Picker.Item label="Select an instructor" value={null} />
+                    {instructors?.map((instructor) => (
+                        <Picker.Item
+                            key={instructor.id}
+                            label={`${instructor.firstName} ${instructor.lastName}`}
+                            value={instructor.id}
+                        />
+                    ))}
+                </Picker>
 
                 {/* Buttons */}
                 <View className="flex-row justify-between mt-4">
