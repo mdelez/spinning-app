@@ -32,10 +32,7 @@ export default function Sessions() {
                     >
                         <View className="justify-center items-center">
                             <ThemedText color="#000" className="text-lg font-semibold mb-1">
-                                {item.name}
-                            </ThemedText>
-                            <ThemedText color="#000" className="text-base">
-                                {item.description}
+                                {item.theme ? item.theme : 'Ride'}
                             </ThemedText>
                             <ThemedText color="#000" className="text-base">
                                 Instructor: {item.instructor.firstName}

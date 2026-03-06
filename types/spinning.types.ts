@@ -1,5 +1,7 @@
 export type Role = "USER" | "INSTRUCTOR" | "ADMIN" | "SUPER_ADMIN";
 
+export type RideType = "NORMAL" | "EVENT" | "INTRO";
+
 export interface User {
   id: string;
   email: string;
@@ -12,21 +14,25 @@ export interface User {
 
 export interface Session {
   id: string;
-  name: string;
+  theme?: string;
   startAt: string;
   endAt: string;
-  description: string;
+  description?: string;
+  rideType: RideType;
+  tokenPrice: number;
   instructor: Instructor;
   studio: Studio;
 }
 
 export interface CreateSessionInput {
-  name: string;
+  theme?: string;
   startAt: string;
   endAt: string;
-  description: string;
+  description?: string;
   instructorId: string;
   studioId: string;
+  rideType: RideType;
+  tokenPrice?: number;
 }
 
 export type UpdateSessionInput = Partial<{

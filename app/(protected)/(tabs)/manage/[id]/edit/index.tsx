@@ -4,6 +4,8 @@ import { ThemedText } from "@/components/ThemedText";
 import { useDeleteSession, useGetSession, useUpdateSession } from "@/features/sessions/hooks/useSessions";
 import { useGetStudios } from "@/features/studios/hooks/useStudios";
 import { useGetInstructors } from "@/features/user/hooks/useUsers";
+import { rideTypes, SessionFormData } from "@/types/form.types";
+import { RideType } from "@/types/spinning.types";
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -20,14 +22,15 @@ export default function EditSession() {
     const updateSession = useUpdateSession();
     const deleteSession = useDeleteSession();
 
-    // TODO: add studio id
-    const [sessionData, setSessionData] = useState({
-        name: "",
+    const [sessionData, setSessionData] = useState<SessionFormData>({
+        theme: "",
         description: "",
         instructorId: "",
         studioId: "",
         startAt: new Date(),
         endAt: new Date(),
+        rideType: "NORMAL",
+        tokenPrice: 1.0
     });
 
     // TODO: prompt user on back navigation if unsaved changes exist
@@ -37,12 +40,14 @@ export default function EditSession() {
     useEffect(() => {
         if (data) {
             setSessionData({
-                name: data.name,
+                theme: data.theme,
                 description: data.description,
                 instructorId: data.instructor.id,
                 studioId: data.studio.id,
                 startAt: new Date(data.startAt),
                 endAt: new Date(data.endAt),
+                rideType: data.rideType,
+                tokenPrice: data.tokenPrice
             });
         }
     }, [data]);
@@ -94,12 +99,12 @@ export default function EditSession() {
     return (
         <SafeAreaView className="flex-1 p-4">
             <ScrollView>
-                {/* Name */}
-                <ThemedText className="text-lg font-semibold">Name</ThemedText>
+                {/* Theme */}
+                <ThemedText className="text-lg font-semibold">Theme</ThemedText>
                 <ThemedTextInput
-                    value={sessionData.name}
+                    value={sessionData.theme}
                     onChangeText={(text) => {
-                        setSessionData((prev) => ({ ...prev, name: text }));
+                        setSessionData((prev) => ({ ...prev, theme: text }));
                         setHasUnsavedChanges(true);
                     }}
                     className="border p-2 mb-4 rounded"
@@ -145,7 +150,6 @@ export default function EditSession() {
                 />
 
                 {/* Start Time */}
-                <ThemedText className="text-lg font-semibold">Start Time</ThemedText>
                 <ThemedDateTimePicker
                     label="Start Time"
                     mode="time"
@@ -199,6 +203,25 @@ export default function EditSession() {
                             key={instructor.id}
                             label={`${instructor.firstName} ${instructor.lastName}`}
                             value={instructor.id}
+                        />
+                    ))}
+                </Picker>
+
+                {/* Ride Type */}
+                <Picker
+                    selectedValue={sessionData.rideType}
+                    onValueChange={(itemValue) =>
+                        setSessionData({
+                            ...sessionData,
+                            rideType: itemValue as RideType,
+                        })
+                    }
+                >
+                    {rideTypes.map((type) => (
+                        <Picker.Item
+                            key={type.value}
+                            label={type.label}
+                            value={type.value}
                         />
                     ))}
                 </Picker>

@@ -45,10 +45,7 @@ export default function Manage() {
                     <View className="flex-row justify-between bg-blue-200 rounded-xl p-4 m-4">
                         <View className="flex-1 pr-4">
                             <ThemedText color="#000" className="text-lg font-semibold mb-1">
-                                {item.name}
-                            </ThemedText>
-                            <ThemedText color="#000" className="text-base">
-                                {item.description}
+                                {item.theme ? item.theme : "Ride"}
                             </ThemedText>
                             <ThemedText color="#000" className="text-base">
                                 Instructor: {item.instructor.firstName}

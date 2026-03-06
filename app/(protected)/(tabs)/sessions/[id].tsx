@@ -40,7 +40,9 @@ export default function Details() {
     return (
         <SafeAreaView className="flex-1">
             <ThemedText className="text-2xl font-bold my-4 mx-4">Date: {formattedDate}</ThemedText>
-            <ThemedText className="text-2xl font-bold my-4 mx-4">Name: {data?.name}</ThemedText>
+            {data?.theme && (
+                <ThemedText className="text-2xl font-bold my-4 mx-4">Theme: {data?.theme}</ThemedText>
+            )}
             <ThemedText className="text-2xl font-bold my-4 mx-4">Instructor: {data?.instructor.firstName}</ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">Start time: {formattedStartTime}</ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">End time: {formattedEndTime}</ThemedText>
