@@ -54,10 +54,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
         setUser(fetchedUser);
         setIsLoggedIn(true);
 
-        await SecureStore.setItemAsync(
-            tokenKey,
-            JSON.stringify({ role })
-        );
+        const tokenData = {
+            id: found.id,
+            role,
+        };
+
+        await SecureStore.setItemAsync(tokenKey, JSON.stringify(tokenData));
 
         router.replace("/");
     };

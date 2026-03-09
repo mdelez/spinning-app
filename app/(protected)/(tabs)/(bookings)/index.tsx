@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { AuthContext } from "@/context/authContext";
-import { useBookingsForUser } from "@/features/bookings/hooks/useBookings";
+import { useGetBookingsForUser } from "@/features/bookings/hooks/useBookings";
 import { Booking } from "@/types/spinning.types";
 import { useRouter } from "expo-router";
 import { useContext } from "react";
@@ -39,7 +39,7 @@ function BookingCard({ item, onPress }: { item: Booking; onPress: () => void }) 
     >
       <View className="flex-row justify-between mb-2">
         <ThemedText className="font-semibold text-lg">
-          {item.session.name}
+          {item.session.theme ? item.session.theme : "Ride"}
         </ThemedText>
         <ThemedText className="font-semibold text-lg">
           Bike {item.bike.bikeNumber}
@@ -60,7 +60,7 @@ function BookingCard({ item, onPress }: { item: Booking; onPress: () => void }) 
 
 export default function Bookings() {
     const { user } = useContext(AuthContext);
-    const { data: bookings, isLoading, refetch, isFetching } = useBookingsForUser(user!.id);
+    const { data: bookings, isLoading, refetch, isFetching } = useGetBookingsForUser(user!.id);
     const router = useRouter();
 
     if (isLoading) {

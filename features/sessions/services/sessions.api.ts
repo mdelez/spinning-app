@@ -1,5 +1,5 @@
 import { api } from "@/lib/api";
-import { Bike, CreateSessionInput, Session, UpdateSessionInput } from "@/types/spinning.types";
+import { Bike, Booking, CreateSessionInput, Session, UpdateSessionInput } from "@/types/spinning.types";
 
 export async function getGetSessions(params?: { instructorId: string }): Promise<Session[]> {
   if (!params) {
@@ -13,8 +13,8 @@ export async function getSessionById(id: string): Promise<Session> {
   return api(`/sessions/${id}`);
 }
 
-export async function getSessionsByInstructor(id: string): Promise<Session[]> {
-  return api(`/sessions?instructorId=${id}`);
+export async function getSessionBookings(id: string): Promise<Booking[]> {
+  return api(`/sessions/${id}/bookings`);
 }
 
 export async function getAvailableBikeForSessionById(id: string): Promise<Bike[]> {

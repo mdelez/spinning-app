@@ -28,6 +28,12 @@ export async function updateBooking(id: string, bookingData: Partial<UpdateBooki
     })
 }
 
+export async function checkInUserByBookingId(id: string): Promise<Booking> {
+    return api(`/bookings/${id}/checkin`, {
+        method: "PATCH"
+    })
+}
+
 export async function deleteBooking(id: string): Promise<void> {
     return api(`/bookings/${id}`, {
         method: 'DELETE'

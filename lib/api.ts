@@ -20,13 +20,22 @@ export async function api<T>(
   // console.log('fetch url: ', `${API_URL}${path}`)
 
   if (requireAuth) {
-    const token = await SecureStore.getItemAsync("access-token");
-    if (token) {
-      headers = {
-        ...headers,
-        Authorization: `Bearer ${token}`,
-      };
-    }
+    // const token = await SecureStore.getItemAsync("access-token");
+    // if (token) {
+    //   headers = {
+    //     ...headers,
+    //     Authorization: `Bearer ${token}`,
+    //   };
+    // }
+
+    const stored = await SecureStore.getItemAsync("access-token");
+    const tempUser = stored ? JSON.parse(stored) : null;
+
+    headers = {
+      ...headers,
+      "x-user-id": tempUser?.id || "",
+      "x-user-role": tempUser?.role || "USER",
+    };
   }
 
   const response = await fetch(`${API_URL}${path}`, {

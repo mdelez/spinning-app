@@ -61,6 +61,12 @@ export interface Booking {
   sessionId: string;
   bikeId: string;
 
+  checkedIn: boolean;
+  checkedInAt?: string;
+  checkedInBy?: string;
+  checkedOutAt?: string;
+  checkedOutBy?: string;
+
   friendEmail?: string;
   friendName?: string;
   friendShoeSize?: number;
@@ -71,6 +77,7 @@ export interface Booking {
 
   session: Session;
   bike: Bike;
+  user: User;
 }
 
 export interface CreateBookingInput {

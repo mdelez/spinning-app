@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useBookingById, useDeleteBooking } from "@/features/bookings/hooks/useBookings";
+import { useDeleteBooking, useGetBookingById } from "@/features/bookings/hooks/useBookings";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ActivityIndicator, Alert, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,7 +8,7 @@ export default function ManageBooking() {
     const { bookingId } = useLocalSearchParams<{ bookingId: string; }>();
     const router = useRouter();
 
-    const { data: booking } = useBookingById(bookingId);
+    const { data: booking } = useGetBookingById(bookingId);
     const { mutate: deleteBooking, isPending } = useDeleteBooking();
 
     const handleDeletePress = () => {
