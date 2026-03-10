@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { AuthContext } from "@/context/authContext";
-import { useGetSessions } from "@/features/sessions/hooks/useSessions";
+import { useGetRides } from "@/features/rides/hooks/useRides";
 import Feather from '@expo/vector-icons/Feather';
 import { Redirect, useRouter } from "expo-router";
 import { useContext } from "react";
@@ -11,7 +11,7 @@ export default function Manage() {
     const router = useRouter();
     const { user } = useContext(AuthContext);
     const isAdmin = user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
-    const { data, isLoading, refetch, isFetching } = useGetSessions(
+    const { data, isLoading, refetch, isFetching } = useGetRides(
         isAdmin ? undefined : { instructorId: user!.id }
     );
 
@@ -23,7 +23,7 @@ export default function Manage() {
     if (isLoading) {
         return (
             <SafeAreaView className="flex-1 justify-center items-center">
-                <ThemedText className="text-lg">Loading sessions...</ThemedText>
+                <ThemedText className="text-lg">Loading rides...</ThemedText>
             </SafeAreaView>
         );
     }
@@ -31,11 +31,11 @@ export default function Manage() {
     return (
         <SafeAreaView className="flex-1">
             <ThemedText className="text-2xl font-bold my-4 mx-4">
-                Manage your sessions
+                Manage your rides
             </ThemedText>
 
             {isAdmin && (
-                <Button title="Create session" onPress={() => router.push('/manage/create')} />
+                <Button title="Create ride" onPress={() => router.push('/manage/create')} />
             )}
 
             <FlatList

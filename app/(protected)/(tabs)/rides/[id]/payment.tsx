@@ -8,7 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Payment() {
     const { user } = useContext(AuthContext);
-    const { id: sessionId, bikeId } = useLocalSearchParams<{ id: string; bikeId: string }>();
+    const { id: rideId, bikeId } = useLocalSearchParams<{ id: string; bikeId: string }>();
     const router = useRouter();
 
     const { mutate } = useCreateBooking();
@@ -17,13 +17,13 @@ export default function Payment() {
         mutate(
             {
                 userId: user!.id,
-                sessionId,
+                rideId: rideId,
                 userBikeId: bikeId,
                 paid: true
             },
             {
                 onSuccess: () => {
-                    router.replace(`/sessions/${sessionId}/confirmation`);
+                    router.replace(`/rides/${rideId}/confirmation`);
                 },
                 onError: () => {
                     console.error('payment failed')

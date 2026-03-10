@@ -1,6 +1,6 @@
-import { CreateSessionInput, RideType } from "./spinning.types";
+import { CreateRideInput, RideType } from "./spinning.types";
 
-export type SessionFormData = Omit<CreateSessionInput, "startAt" | "endAt"> & {
+export type RideFormData = Omit<CreateRideInput, "startAt" | "endAt"> & {
   startAt: Date;
   endAt: Date;
 };

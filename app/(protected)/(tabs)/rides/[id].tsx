@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useGetSession } from "@/features/sessions/hooks/useSessions";
+import { useGetRide } from "@/features/rides/hooks/useRides";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Details() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
-    const { data, isLoading } = useGetSession(id);
+    const { data, isLoading } = useGetRide(id);
     // console.log(data);
 
     const start = new Date(data?.startAt ?? new Date());
@@ -32,7 +32,7 @@ export default function Details() {
     if (isLoading) {
         return (
             <SafeAreaView className="flex-1 justify-center items-center">
-                <ThemedText className="text-lg">Loading sessions...</ThemedText>
+                <ThemedText className="text-lg">Loading rides...</ThemedText>
             </SafeAreaView>
         );
     }
@@ -48,7 +48,7 @@ export default function Details() {
             <ThemedText className="text-2xl font-bold my-4 mx-4">End time: {formattedEndTime}</ThemedText>
             <Button
                 title="Book now"
-                onPress={() => router.push(`/sessions/${id}/book`)}
+                onPress={() => router.push(`/rides/${id}/book`)}
             />
         </SafeAreaView>
     );

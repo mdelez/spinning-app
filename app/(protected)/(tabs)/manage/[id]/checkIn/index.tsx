@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { useCheckInUser } from "@/features/bookings/hooks/useBookings";
-import { useGetSession, useGetSessionBookings } from "@/features/sessions/hooks/useSessions";
+import { useGetRide, useGetRideBookings } from "@/features/rides/hooks/useRides";
 import { useTheme } from "@react-navigation/native";
 import { useLocalSearchParams } from "expo-router";
 import { Switch, View } from "react-native";
@@ -9,14 +9,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function CheckIn() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const { dark } = useTheme();
-    const { data, isLoading } = useGetSession(id);
-    const { data: bookings } = useGetSessionBookings(id);
+    const { data, isLoading } = useGetRide(id);
+    const { data: bookings } = useGetRideBookings(id);
     const { mutate: toggleCheckIn } = useCheckInUser(id);
 
     if (isLoading) {
         return (
             <SafeAreaView className="flex-1 justify-center items-center">
-                <ThemedText className="text-lg">Loading session...</ThemedText>
+                <ThemedText className="text-lg">Loading ride...</ThemedText>
             </SafeAreaView>
         );
     }

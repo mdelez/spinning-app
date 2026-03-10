@@ -11,8 +11,8 @@ export default function Confirmation() {
             <View>
                 <ThemedText>Confirmation</ThemedText>
                 <Button
-                    title="Go back to sessions"
-                    onPress={() => router.replace(`/sessions`)}
+                    title="Go back to rides"
+                    onPress={() => router.replace(`/rides`)}
                 />
             </View>
         </SafeAreaView>

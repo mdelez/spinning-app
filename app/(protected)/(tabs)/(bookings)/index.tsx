@@ -16,7 +16,7 @@ function formatDateHeader(dateStr: string) {
 function groupBookingsByDate(bookings: Booking[]) {
     const grouped: Record<string, Booking[]> = {};
     bookings.forEach((booking) => {
-        const dateKey = booking.session.startAt.split("T")[0]; // YYYY-MM-DD
+        const dateKey = booking.ride.startAt.split("T")[0]; // YYYY-MM-DD
         if (!grouped[dateKey]) grouped[dateKey] = [];
         grouped[dateKey].push(booking);
     });
@@ -39,7 +39,7 @@ function BookingCard({ item, onPress }: { item: Booking; onPress: () => void }) 
     >
       <View className="flex-row justify-between mb-2">
         <ThemedText className="font-semibold text-lg">
-          {item.session.theme ? item.session.theme : "Ride"}
+          {item.ride.theme ? item.ride.theme : "Ride"}
         </ThemedText>
         <ThemedText className="font-semibold text-lg">
           Bike {item.bike.bikeNumber}
@@ -47,11 +47,11 @@ function BookingCard({ item, onPress }: { item: Booking; onPress: () => void }) 
       </View>
       <View className="flex-row justify-between mt-2">
         <ThemedText className="text-sm">
-          Instructor: {item.session.instructor.firstName}
+          Instructor: {item.ride.instructor.firstName}
         </ThemedText>
         <ThemedText className="text-sm">
-          {new Date(item.session.startAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} -{" "}
-          {new Date(item.session.endAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          {new Date(item.ride.startAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} -{" "}
+          {new Date(item.ride.endAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
         </ThemedText>
       </View>
     </Pressable>
@@ -66,7 +66,7 @@ export default function Bookings() {
     if (isLoading) {
         return (
             <SafeAreaView className="flex-1 justify-center items-center">
-                <ThemedText className="text-lg">Loading your sessions...</ThemedText>
+                <ThemedText className="text-lg">Loading your rides...</ThemedText>
             </SafeAreaView>
         );
     }
@@ -76,7 +76,7 @@ export default function Bookings() {
     return (
         <SafeAreaView className="flex-1">
             <ThemedText className="text-2xl font-bold my-4 mx-4">
-                Your upcoming sessions
+                Your upcoming rides
             </ThemedText>
 
             <SectionList

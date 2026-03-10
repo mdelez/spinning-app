@@ -12,7 +12,7 @@ export interface User {
   shoeSize: number;
 }
 
-export interface Session {
+export interface Ride {
   id: string;
   theme?: string;
   startAt: string;
@@ -24,7 +24,7 @@ export interface Session {
   studio: Studio;
 }
 
-export interface CreateSessionInput {
+export interface CreateRideInput {
   theme?: string;
   startAt: string;
   endAt: string;
@@ -35,7 +35,7 @@ export interface CreateSessionInput {
   tokenPrice?: number;
 }
 
-export type UpdateSessionInput = Partial<{
+export type UpdateRideInput = Partial<{
   name?: string;
   startAt?: string;
   endAt?: string;
@@ -58,7 +58,7 @@ export interface Bike {
 export interface Booking {
   id: string;
   userId: string;
-  sessionId: string;
+  rideId: string;
   bikeId: string;
 
   checkedIn: boolean;
@@ -75,14 +75,14 @@ export interface Booking {
   paid: boolean;
   createdAt: string;
 
-  session: Session;
+  ride: Ride;
   bike: Bike;
   user: User;
 }
 
 export interface CreateBookingInput {
   userId: string;
-  sessionId: string;
+  rideId: string;
   userBikeId: string;
   paid: boolean;
 

@@ -1,10 +1,10 @@
 import { ThemedDateTimePicker } from "@/components/ThemedDatePicker";
 import { ThemedTextInput } from "@/components/ThemedInput";
 import { ThemedText } from "@/components/ThemedText";
-import { useDeleteSession, useGetSession, useUpdateSession } from "@/features/sessions/hooks/useSessions";
+import { useDeleteRide, useGetRide, useUpdateRide } from "@/features/rides/hooks/useRides";
 import { useGetStudios } from "@/features/studios/hooks/useStudios";
 import { useGetInstructors } from "@/features/user/hooks/useUsers";
-import { rideTypes, SessionFormData } from "@/types/form.types";
+import { RideFormData, rideTypes } from "@/types/form.types";
 import { RideType } from "@/types/spinning.types";
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -12,17 +12,17 @@ import { useEffect, useState } from "react";
 import { Alert, Button, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function EditSession() {
+export default function EditRide() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
 
     const { data: instructors } = useGetInstructors();
     const { data: studios } = useGetStudios();
-    const { data, isLoading } = useGetSession(id);
-    const updateSession = useUpdateSession();
-    const deleteSession = useDeleteSession();
+    const { data, isLoading } = useGetRide(id);
+    const updateRide = useUpdateRide();
+    const deleteRide = useDeleteRide();
 
-    const [sessionData, setSessionData] = useState<SessionFormData>({
+    const [rideData, setRideData] = useState<RideFormData>({
         theme: "",
         description: "",
         instructorId: "",
@@ -36,10 +36,10 @@ export default function EditSession() {
     // TODO: prompt user on back navigation if unsaved changes exist
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-    // populate local state when session data loads
+    // populate local state when ride data loads
     useEffect(() => {
         if (data) {
-            setSessionData({
+            setRideData({
                 theme: data.theme,
                 description: data.description,
                 instructorId: data.instructor.id,
@@ -55,19 +55,19 @@ export default function EditSession() {
     if (isLoading) {
         return (
             <SafeAreaView className="flex-1 justify-center items-center">
-                <ThemedText className="text-lg">Loading session...</ThemedText>
+                <ThemedText className="text-lg">Loading ride...</ThemedText>
             </SafeAreaView>
         );
     }
 
     const handleSave = async () => {
         try {
-            await updateSession.mutateAsync({
+            await updateRide.mutateAsync({
                 id,
                 updateData: {
-                    ...sessionData,
-                    startAt: sessionData.startAt.toISOString(),
-                    endAt: sessionData.endAt.toISOString()
+                    ...rideData,
+                    startAt: rideData.startAt.toISOString(),
+                    endAt: rideData.endAt.toISOString()
                 },
             });
             setHasUnsavedChanges(false);
@@ -79,15 +79,15 @@ export default function EditSession() {
 
     const handleDelete = () => {
         Alert.alert(
-            "Delete Session",
-            "Are you sure you want to delete this session?",
+            "Delete Ride",
+            "Are you sure you want to delete this ride?",
             [
                 { text: "Cancel", style: "cancel" },
                 {
                     text: "Delete",
                     style: "destructive",
                     onPress: () => {
-                        deleteSession.mutate({ sessionId: id, instructorId: data!.instructor.id }, {
+                        deleteRide.mutate({ rideId: id, instructorId: data!.instructor.id }, {
                             onSuccess: () => router.back(),
                         });
                     },
@@ -102,9 +102,9 @@ export default function EditSession() {
                 {/* Theme */}
                 <ThemedText className="text-lg font-semibold">Theme</ThemedText>
                 <ThemedTextInput
-                    value={sessionData.theme}
+                    value={rideData.theme}
                     onChangeText={(text) => {
-                        setSessionData((prev) => ({ ...prev, theme: text }));
+                        setRideData((prev) => ({ ...prev, theme: text }));
                         setHasUnsavedChanges(true);
                     }}
                     className="border p-2 mb-4 rounded"
@@ -113,9 +113,9 @@ export default function EditSession() {
                 {/* Description */}
                 <ThemedText className="text-lg font-semibold">Description</ThemedText>
                 <ThemedTextInput
-                    value={sessionData.description}
+                    value={rideData.description}
                     onChangeText={(text) => {
-                        setSessionData((prev) => ({ ...prev, description: text }));
+                        setRideData((prev) => ({ ...prev, description: text }));
                         setHasUnsavedChanges(true);
                     }}
                     className="border p-2 mb-4 rounded"
@@ -126,9 +126,9 @@ export default function EditSession() {
                 <ThemedDateTimePicker
                     label="Date"
                     mode="date"
-                    value={sessionData.startAt} // use start date as base
+                    value={rideData.startAt} // use start date as base
                     onChange={(date) => {
-                        setSessionData((prev) => ({
+                        setRideData((prev) => ({
                             ...prev,
                             startAt: new Date(
                                 date.getFullYear(),
@@ -153,9 +153,9 @@ export default function EditSession() {
                 <ThemedDateTimePicker
                     label="Start Time"
                     mode="time"
-                    value={sessionData.startAt}
+                    value={rideData.startAt}
                     onChange={(date) => {
-                        setSessionData((prev) => ({ ...prev, startAt: date }));
+                        setRideData((prev) => ({ ...prev, startAt: date }));
                         setHasUnsavedChanges(true);
                     }}
                 />
@@ -164,18 +164,18 @@ export default function EditSession() {
                 <ThemedDateTimePicker
                     label="End Time"
                     mode="time"
-                    value={sessionData.endAt}
+                    value={rideData.endAt}
                     onChange={(date) => {
-                        setSessionData((prev) => ({ ...prev, endAt: date }));
+                        setRideData((prev) => ({ ...prev, endAt: date }));
                         setHasUnsavedChanges(true);
                     }}
                 />
 
                 {/* Studio */}
                 <Picker
-                    selectedValue={sessionData.studioId}
-                    onValueChange={(itemValue) => setSessionData({
-                        ...sessionData,
+                    selectedValue={rideData.studioId}
+                    onValueChange={(itemValue) => setRideData({
+                        ...rideData,
                         studioId: itemValue
                     })}
                 >
@@ -191,9 +191,9 @@ export default function EditSession() {
 
                 {/* Instructor */}
                 <Picker
-                    selectedValue={sessionData.instructorId}
-                    onValueChange={(itemValue) => setSessionData({
-                        ...sessionData,
+                    selectedValue={rideData.instructorId}
+                    onValueChange={(itemValue) => setRideData({
+                        ...rideData,
                         instructorId: itemValue
                     })}
                 >
@@ -209,10 +209,10 @@ export default function EditSession() {
 
                 {/* Ride Type */}
                 <Picker
-                    selectedValue={sessionData.rideType}
+                    selectedValue={rideData.rideType}
                     onValueChange={(itemValue) =>
-                        setSessionData({
-                            ...sessionData,
+                        setRideData({
+                            ...rideData,
                             rideType: itemValue as RideType,
                         })
                     }
@@ -228,7 +228,7 @@ export default function EditSession() {
 
                 {/* Buttons */}
                 <View className="flex-row justify-between mt-4">
-                    <Button title="Delete Session" color="red" onPress={handleDelete} />
+                    <Button title="Delete Ride" color="red" onPress={handleDelete} />
                     <Button title="Save Changes" onPress={handleSave} />
                 </View>
             </ScrollView>

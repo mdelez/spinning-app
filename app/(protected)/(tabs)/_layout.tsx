@@ -27,9 +27,9 @@ export default function BottomTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="sessions"
+        name="rides"
         options={{
-          title: "Sessions",
+          title: "Rides",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons

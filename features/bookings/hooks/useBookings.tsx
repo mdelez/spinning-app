@@ -33,9 +33,9 @@ export function useCreateBooking() {
   });
 }
 
-export function useCheckInUser(sessionId: string) {
+export function useCheckInUser(rideId: string) {
   const queryClient = useQueryClient();
-  const queryKey = [`session-${sessionId}-bookings`];
+  const queryKey = [`ride-${rideId}-bookings`];
 
   return useMutation({
     mutationFn: ({ bookingId }: { bookingId: string }) =>
@@ -92,69 +92,6 @@ export function useCheckInUser(sessionId: string) {
     },
   });
 }
-
-// export function useCheckInUser(sessionId: string) {
-//   const queryClient = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: ({ bookingId }: { bookingId: string }) =>
-//       checkInUserByBookingId(bookingId),
-
-//     onMutate: async ({ bookingId }) => {
-//       await queryClient.cancelQueries({ queryKey: ["booking", bookingId] });
-//       await queryClient.cancelQueries({ queryKey: [`session-${sessionId}-bookings`] });
-
-//       // snapshot previous data
-//       const previousBooking = queryClient.getQueryData<Booking>(["booking", bookingId]);
-//       const previousBookings = queryClient.getQueryData<Booking[]>([`session-${sessionId}-bookings`]);
-
-//       const stored = await SecureStore.getItemAsync("auth-token");
-//       const currentUser = stored ? JSON.parse(stored) : { id: "unknown" };
-
-//       // optimistically update single booking cache
-//       queryClient.setQueryData<Booking>(["booking", bookingId], old =>
-//         old
-//           ? {
-//             ...old,
-//             checkedIn: !old.checkedIn,
-//             checkedInAt: !old.checkedIn ? new Date().toISOString() : undefined,
-//             checkedInBy: !old.checkedIn ? currentUser.id : undefined,
-//             checkedOutAt: old.checkedIn ? new Date().toISOString() : undefined,
-//             checkedOutBy: old.checkedIn ? currentUser.id : undefined,
-//           }
-//           : old
-//       );
-
-//       // optimistically update session bookings list
-//       queryClient.setQueryData<Booking[]>([`session-${sessionId}-bookings`], old =>
-//         old?.map(b =>
-//           b.id === bookingId
-//             ? queryClient.getQueryData<Booking>(["booking", bookingId])!
-//             : b
-//         )
-//       );
-
-//       // return snapshots for rollback
-//       return { previousBooking, previousBookings };
-//     },
-
-//     onError: (_err, variables, context: any) => {
-//       const bookingId = variables.bookingId;
-//       if (context?.previousBooking) {
-//         queryClient.setQueryData(["booking", bookingId], context.previousBooking);
-//       }
-//       if (context?.previousBookings) {
-//         queryClient.setQueryData([`session-${sessionId}-bookings`], context.previousBookings);
-//       }
-//     },
-
-//     onSettled: (_data, _error, variables) => {
-//       const bookingId = variables.bookingId;
-//       queryClient.invalidateQueries({ queryKey: ["booking", bookingId] });
-//       queryClient.invalidateQueries({ queryKey: [`session-${sessionId}-bookings`] });
-//     },
-//   });
-// }
 
 export function useDeleteBooking() {
   const queryClient = useQueryClient();

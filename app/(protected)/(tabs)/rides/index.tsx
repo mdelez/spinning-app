@@ -1,17 +1,17 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useGetSessions } from "@/features/sessions/hooks/useSessions";
+import { useGetRides } from "@/features/rides/hooks/useRides";
 import { useRouter } from "expo-router";
 import { FlatList, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Sessions() {
+export default function Rides() {
     const router = useRouter();
-    const { data, isLoading, refetch, isFetching } = useGetSessions();
+    const { data, isLoading, refetch, isFetching } = useGetRides();
 
     if (isLoading) {
         return (
             <SafeAreaView className="flex-1 justify-center items-center">
-                <ThemedText className="text-lg">Loading sessions...</ThemedText>
+                <ThemedText className="text-lg">Loading rides...</ThemedText>
             </SafeAreaView>
         );
     }
@@ -19,7 +19,7 @@ export default function Sessions() {
     return (
         <SafeAreaView className="flex-1">
             <ThemedText className="text-2xl font-bold my-4 mx-4">
-                Browse available sessions
+                Browse available rides
             </ThemedText>
 
             <FlatList
@@ -27,7 +27,7 @@ export default function Sessions() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <Pressable
-                        onPress={() => router.push(`/sessions/${item.id}`)}
+                        onPress={() => router.push(`/rides/${item.id}`)}
                         className="bg-blue-200 rounded-xl p-4 m-4"
                     >
                         <View className="justify-center items-center">

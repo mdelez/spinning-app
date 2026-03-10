@@ -1,10 +1,10 @@
 import { ThemedDateTimePicker } from "@/components/ThemedDatePicker";
 import { ThemedTextInput } from "@/components/ThemedInput";
 import { ThemedText } from "@/components/ThemedText";
-import { useCreateSession } from "@/features/sessions/hooks/useSessions";
+import { useCreateRide } from "@/features/rides/hooks/useRides";
 import { useGetStudios } from "@/features/studios/hooks/useStudios";
 import { useGetInstructors } from "@/features/user/hooks/useUsers";
-import { rideTypes, SessionFormData } from "@/types/form.types";
+import { RideFormData, rideTypes } from "@/types/form.types";
 import { RideType } from "@/types/spinning.types";
 import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
@@ -12,14 +12,14 @@ import { useState } from "react";
 import { Alert, Button, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function CreateSession() {
+export default function CreateRide() {
     const { data: instructors } = useGetInstructors();
     const { data: studios } = useGetStudios();
-    const createSession = useCreateSession();
+    const createRide = useCreateRide();
     const router = useRouter();
 
     // TODO: add studio id
-    const [sessionData, setSessionData] = useState<SessionFormData>({
+    const [rideData, setRideData] = useState<RideFormData>({
         theme: "",
         description: "",
         instructorId: "",
@@ -32,18 +32,18 @@ export default function CreateSession() {
 
     const handleSave = async () => {
         try {
-            await createSession.mutateAsync({
-                ...sessionData,
-                startAt: sessionData.startAt.toISOString(),
-                endAt: sessionData.endAt.toISOString(),
-                instructorId: sessionData.instructorId,
-                studioId: sessionData.studioId
+            await createRide.mutateAsync({
+                ...rideData,
+                startAt: rideData.startAt.toISOString(),
+                endAt: rideData.endAt.toISOString(),
+                instructorId: rideData.instructorId,
+                studioId: rideData.studioId
             },
                 {
                     onSuccess: () => {
                         Alert.alert(
                             "Success!",
-                            "Your session has been created.",
+                            "Your ride has been created.",
                             [
                                 {
                                     text: "Okay",
@@ -58,7 +58,7 @@ export default function CreateSession() {
                 }
             )
         } catch (error) {
-            console.log("Failed to create session: ", error)
+            console.log("Failed to create ride: ", error)
         }
     }
 
@@ -68,9 +68,9 @@ export default function CreateSession() {
                 {/* Theme */}
                 <ThemedText className="text-lg font-semibold">Theme</ThemedText>
                 <ThemedTextInput
-                    value={sessionData.theme}
+                    value={rideData.theme}
                     onChangeText={(text) => {
-                        setSessionData((prev) => ({ ...prev, theme: text }));
+                        setRideData((prev) => ({ ...prev, theme: text }));
                         // setHasUnsavedChanges(true);
                     }}
                     className="border p-2 mb-4 rounded"
@@ -79,9 +79,9 @@ export default function CreateSession() {
                 {/* Description */}
                 <ThemedText className="text-lg font-semibold">Description</ThemedText>
                 <ThemedTextInput
-                    value={sessionData.description}
+                    value={rideData.description}
                     onChangeText={(text) => {
-                        setSessionData((prev) => ({ ...prev, description: text }));
+                        setRideData((prev) => ({ ...prev, description: text }));
                         // setHasUnsavedChanges(true);
                     }}
                     className="border p-2 mb-4 rounded"
@@ -92,9 +92,9 @@ export default function CreateSession() {
                 <ThemedDateTimePicker
                     label="Date"
                     mode="date"
-                    value={sessionData.startAt} // use start date as base
+                    value={rideData.startAt} // use start date as base
                     onChange={(date) => {
-                        setSessionData((prev) => ({
+                        setRideData((prev) => ({
                             ...prev,
                             startAt: new Date(
                                 date.getFullYear(),
@@ -120,9 +120,9 @@ export default function CreateSession() {
                 <ThemedDateTimePicker
                     label="Start Time"
                     mode="time"
-                    value={sessionData.startAt}
+                    value={rideData.startAt}
                     onChange={(date) => {
-                        setSessionData((prev) => ({ ...prev, startAt: date }));
+                        setRideData((prev) => ({ ...prev, startAt: date }));
                         // setHasUnsavedChanges(true);
                     }}
                 />
@@ -131,18 +131,18 @@ export default function CreateSession() {
                 <ThemedDateTimePicker
                     label="End Time"
                     mode="time"
-                    value={sessionData.endAt}
+                    value={rideData.endAt}
                     onChange={(date) => {
-                        setSessionData((prev) => ({ ...prev, endAt: date }));
+                        setRideData((prev) => ({ ...prev, endAt: date }));
                         // setHasUnsavedChanges(true);
                     }}
                 />
 
                 {/* Studio */}
                 <Picker
-                    selectedValue={sessionData.studioId}
-                    onValueChange={(itemValue) => setSessionData({
-                        ...sessionData,
+                    selectedValue={rideData.studioId}
+                    onValueChange={(itemValue) => setRideData({
+                        ...rideData,
                         studioId: itemValue
                     })}
                 >
@@ -158,9 +158,9 @@ export default function CreateSession() {
 
                 {/* Instructor */}
                 <Picker
-                    selectedValue={sessionData.instructorId}
-                    onValueChange={(itemValue) => setSessionData({
-                        ...sessionData,
+                    selectedValue={rideData.instructorId}
+                    onValueChange={(itemValue) => setRideData({
+                        ...rideData,
                         instructorId: itemValue
                     })}
                 >
@@ -176,10 +176,10 @@ export default function CreateSession() {
 
                 {/* Ride Type */}
                 <Picker
-                    selectedValue={sessionData.rideType}
+                    selectedValue={rideData.rideType}
                     onValueChange={(itemValue) =>
-                        setSessionData({
-                            ...sessionData,
+                        setRideData({
+                            ...rideData,
                             rideType: itemValue as RideType,
                         })
                     }
@@ -195,7 +195,7 @@ export default function CreateSession() {
 
                 {/* Buttons */}
                 <View className="flex-row justify-between mt-4">
-                    <Button title="Create session" onPress={handleSave} />
+                    <Button title="Create ride" onPress={handleSave} />
                 </View>
             </ScrollView>
         </SafeAreaView>
