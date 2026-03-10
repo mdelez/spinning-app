@@ -29,6 +29,9 @@ export default function RootLayout() {
                                     animation: "none"
                                 }}
                             />
+                            <Stack.Screen
+                                name="signup"
+                            />
                         </Stack>
                     </SafeAreaProvider>
                 </AuthProvider>

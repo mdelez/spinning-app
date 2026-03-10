@@ -5,11 +5,15 @@ export type RideType = "NORMAL" | "EVENT" | "INTRO";
 export interface User {
   id: string;
   email: string;
+  emailVerified: boolean;
+  name: string;
   firstName: string;
   lastName: string;
   role: Role;
   dateOfBirth: Date;
   shoeSize: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Ride {
