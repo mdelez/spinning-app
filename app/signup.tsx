@@ -9,7 +9,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function SignUp() {
     const { isLoading, signUp } = useContext(AuthContext);
     const router = useRouter();
-    const [name, setName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [shoeSize, setShoeSize] = useState(42);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -21,8 +23,24 @@ export default function SignUp() {
 
                 <ThemedTextInput
                     placeholder="Name"
-                    value={name}
-                    onChangeText={setName}
+                    value={firstName}
+                    onChangeText={setFirstName}
+                    className="border border-gray-300 rounded-md px-4 py-3 mb-4"
+                />
+
+                <ThemedTextInput
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChangeText={setLastName}
+                    className="border border-gray-300 rounded-md px-4 py-3 mb-4"
+                />
+
+                <ThemedTextInput
+                    placeholder="Shoe Size"
+                    value={shoeSize.toString()}
+                    onChangeText={(e) => setShoeSize(parseInt(e))}
+                    keyboardType="numeric"
+                    maxLength={2}
                     className="border border-gray-300 rounded-md px-4 py-3 mb-4"
                 />
 
@@ -53,7 +71,7 @@ export default function SignUp() {
 
                 <View className="flex-1 gap-4">
                     <Pressable
-                        onPress={() => signUp(name, email, password, passwordConfirm)}
+                        onPress={() => signUp(email, firstName, lastName, shoeSize, password, passwordConfirm)}
                         disabled={isLoading}
                         className={`bg-blue-600 py-3 rounded-md ${isLoading ? 'opacity-50' : 'opacity-100'}`}
                     >

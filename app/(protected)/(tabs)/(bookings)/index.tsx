@@ -76,7 +76,7 @@ export default function Bookings() {
     return (
         <SafeAreaView className="flex-1">
           <ThemedText className="text-2xl font-bold my-4 mx-4">
-                {`Hi ${user?.name}!`}
+                {`Hi ${user?.firstName}!`}
             </ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">
                 Your upcoming rides

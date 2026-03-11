@@ -13,7 +13,14 @@ type AuthState = {
     user: User | null;
     logIn: (email: string, password: string) => void;
     logOut: () => void;
-    signUp: (name: string, email: string, password: string, passwordConfirm: string) => void;
+    signUp: (
+        email: string,
+        firstName: string,
+        lastName: string,
+        shoeSize: number,
+        password: string,
+        passwordConfirm: string
+    ) => void;
 }
 
 export const AuthContext = createContext<AuthState>({
@@ -47,6 +54,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
                     onSuccess: (ctx) => {
                         setIsLoading(false);
                         const user = ctx.data?.user;
+                        console.log('auth user: ', user);
 
                         if (!user) {
                             console.error("Login succeeded but no user returned", ctx);
@@ -81,7 +89,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
         router.replace("/login");
     };
 
-    const signUp = async (name: string, email: string, password: string, passwordConfirm: string) => {
+    const signUp = async (
+        email: string, 
+        firstName: string, 
+        lastName: string, 
+        shoeSize: number, 
+        password: string, 
+        passwordConfirm: string
+    ) => {
         if (password !== passwordConfirm) {
             Alert.alert("Error", "Passwords do not match");
             return;
@@ -92,7 +107,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 {
                     email,
                     password,
-                    name,
+                    name: `${firstName} ${lastName}`,
+                    firstName,
+                    lastName,
+                    shoeSize,
                     callbackURL: "spinningapp://auth/callback",
                 },
                 {
