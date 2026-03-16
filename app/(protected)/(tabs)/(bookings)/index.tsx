@@ -60,7 +60,7 @@ function BookingCard({ item, onPress }: { item: Booking; onPress: () => void }) 
 
 export default function Bookings() {
     const { user } = useContext(AuthContext);
-    const { data: bookings, isLoading, refetch, isFetching } = useGetBookingsForUser(user!.id);
+    const { data: bookings, isLoading, refetch, isFetching } = useGetBookingsForUser();
     const router = useRouter();
 
     if (isLoading) {
