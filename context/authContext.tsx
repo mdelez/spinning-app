@@ -54,7 +54,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
                     onSuccess: (ctx) => {
                         setIsLoading(false);
                         const user = ctx.data?.user;
-                        console.log('auth user: ', user);
 
                         if (!user) {
                             console.error("Login succeeded but no user returned", ctx);
