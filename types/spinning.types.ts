@@ -26,6 +26,7 @@ export interface Ride {
   tokenPrice: number;
   instructor: Instructor;
   studio: Studio;
+  availableSpots: number;
 }
 
 export interface CreateRideInput {

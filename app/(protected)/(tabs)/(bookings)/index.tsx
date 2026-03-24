@@ -27,35 +27,45 @@ function groupBookingsByDate(bookings: Booking[]) {
 }
 
 function BookingCard({ item, onPress }: { item: Booking; onPress: () => void }) {
-  const isDark = useColorScheme() === "dark";
+    const isDark = useColorScheme() === "dark";
 
-  return (
-    <Pressable
-      onPress={onPress}
-      className={`
-        rounded-xl p-4 m-2
-        ${isDark ? "bg-gray-800 shadow-lg" : "bg-white shadow-md"}
-      `}
-    >
-      <View className="flex-row justify-between mb-2">
-        <ThemedText className="font-semibold text-lg">
-          {item.ride.theme ? item.ride.theme : "Ride"}
-        </ThemedText>
-        <ThemedText className="font-semibold text-lg">
-          Bike {item.bike.bikeNumber}
-        </ThemedText>
-      </View>
-      <View className="flex-row justify-between mt-2">
-        <ThemedText className="text-sm">
-          Instructor: {item.ride.instructor.firstName}
-        </ThemedText>
-        <ThemedText className="text-sm">
-          {new Date(item.ride.startAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} -{" "}
-          {new Date(item.ride.endAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-        </ThemedText>
-      </View>
-    </Pressable>
-  );
+    return (
+        <Pressable
+            onPress={onPress}
+            className={`
+                rounded-xl pb-4 pt-0 m-2
+                ${isDark ? "bg-gray-800 shadow-lg" : "bg-white shadow-md"}
+            `}
+        >
+            <View
+                className={`
+                    h-4 rounded-t-xl items-center
+                    ${item.ride.rideType === 'EVENT' ? "bg-red-500" : ""}
+                    ${item.ride.rideType === 'INTRO' ? "bg-blue-600" : ""}
+                `}>
+                <ThemedText className="font-extralight">
+                    {item.ride.rideType === 'EVENT' ? "Event" : item.ride.rideType === 'INTRO' ? "Intro" : ""}
+                </ThemedText>
+            </View>
+            <View className="flex-row justify-between mb-2 px-4">
+                <ThemedText className="font-semibold text-lg">
+                    {item.ride.theme ? item.ride.theme : "Ride"}
+                </ThemedText>
+                <ThemedText className="font-semibold text-lg">
+                    Bike {item.bike.bikeNumber}
+                </ThemedText>
+            </View>
+            <View className="flex-row justify-between mt-2 px-4">
+                <ThemedText className="text-sm">
+                    Instructor: {item.ride.instructor.firstName}
+                </ThemedText>
+                <ThemedText className="text-sm">
+                    {new Date(item.ride.startAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} -{" "}
+                    {new Date(item.ride.endAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                </ThemedText>
+            </View>
+        </Pressable>
+    );
 }
 
 export default function Bookings() {
@@ -75,7 +85,7 @@ export default function Bookings() {
 
     return (
         <SafeAreaView className="flex-1">
-          <ThemedText className="text-2xl font-bold my-4 mx-4">
+            <ThemedText className="text-2xl font-bold my-4 mx-4">
                 {`Hi ${user?.firstName}!`}
             </ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">
