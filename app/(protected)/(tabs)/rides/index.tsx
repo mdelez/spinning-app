@@ -34,9 +34,16 @@ export default function Rides() {
                         ${item.rideType === 'EVENT' ? "bg-red-500" : ""}
                         ${item.rideType === 'INTRO' ? "bg-blue-600" : ""}
                     `}>
+                    {item.rideType === "EVENT" && (
                         <ThemedText className="font-extralight">
-                            {item.rideType === 'EVENT' ? "Event" : item.rideType === 'INTRO' ? "Intro" : ""}
-                        </ThemedText>
+                            Event
+                        </ThemedText>)
+                    }
+                    {item.rideType === "INTRO" && (
+                        <ThemedText className="font-extralight">
+                            Intro
+                        </ThemedText>)
+                    }
                 </View>
                 <View className="flex-row justify-between mb-2 px-4">
                     <ThemedText className="font-semibold text-lg">
