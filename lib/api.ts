@@ -1,4 +1,4 @@
-import * as SecureStore from "expo-secure-store";
+import { authClient } from "@/auth/auth.config";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -17,24 +17,18 @@ export async function api<T>(
     ...(fetchOptions.headers || {}),
   };
 
-  // console.log('fetch url: ', `${API_URL}${path}`)
-
   if (requireAuth) {
-    // const token = await SecureStore.getItemAsync("access-token");
-    // if (token) {
-    //   headers = {
-    //     ...headers,
-    //     Authorization: `Bearer ${token}`,
-    //   };
-    // }
+    // Get session from Better Auth
+    const session = await authClient.getSession();
+    const token = session.data?.session.token;
 
-    const stored = await SecureStore.getItemAsync("access-token");
-    const tempUser = stored ? JSON.parse(stored) : null;
+    if (!token) {
+      throw new Error("No access token found. User is not authenticated.");
+    }
 
     headers = {
       ...headers,
-      "x-user-id": tempUser?.id || "",
-      "x-user-role": tempUser?.role || "USER",
+      Authorization: `Bearer ${token}`,
     };
   }
 
@@ -48,9 +42,8 @@ export async function api<T>(
     throw new Error(errorText || "API request failed");
   }
 
-  // only parse JSON if response has content
   if (response.status === 204) {
-    return undefined as unknown as T; // explicitly return undefined for 204
+    return undefined as unknown as T;
   }
 
   return response.json();

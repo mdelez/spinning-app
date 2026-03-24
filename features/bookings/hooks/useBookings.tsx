@@ -1,7 +1,7 @@
 import { Booking } from "@/types/spinning.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as SecureStore from 'expo-secure-store';
-import { checkInUserByBookingId, createBooking, deleteBooking, getBookingById, getBookingsForUser } from "../services/bookings.api";
+import { checkInUserByBookingId, createBooking, deleteBooking, getBookingById, getBookingsForUser, getBookingsForUserById } from "../services/bookings.api";
 
 export function useGetBookingById(id: string) {
   return useQuery<Booking>({
@@ -11,10 +11,17 @@ export function useGetBookingById(id: string) {
   })
 }
 
-export function useGetBookingsForUser(id: string) {
+export function useGetBookingsForUser() {
   return useQuery<Booking[]>({
-    queryKey: ["bookings-user", id],
-    queryFn: () => getBookingsForUser(id),
+    queryKey: ["bookings-user"],
+    queryFn: () => getBookingsForUser()
+  })
+}
+
+export function useGetBookingsForUserById(id: string) {
+  return useQuery<Booking[]>({
+    queryKey: ["bookings-user-by-id", id],
+    queryFn: () => getBookingsForUserById(id),
     enabled: !!id
   })
 }

@@ -5,8 +5,12 @@ export async function getBookings(): Promise<Booking[]> {
     return api("/bookings");
 }
 
-export async function getBookingsForUser(id: string): Promise<Booking[]> {
+export async function getBookingsForUserById(id: string): Promise<Booking[]> {
     return api(`/bookings?userId=${id}`);
+}
+
+export async function getBookingsForUser(): Promise<Booking[]> {
+    return api("/bookings/me");
 }
 
 export async function getBookingById(id: string): Promise<Booking> {

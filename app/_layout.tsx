@@ -26,7 +26,16 @@ export default function RootLayout() {
                             <Stack.Screen
                                 name="login"
                                 options={{
-                                    animation: "none"
+                                    headerShown: false,
+                                    animation: "none",
+                                    gestureEnabled: false
+                                }}
+                            />
+                            <Stack.Screen
+                                name="signup"
+                                options={{
+                                    headerShown: false,
+                                    gestureEnabled: false
                                 }}
                             />
                         </Stack>

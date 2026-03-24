@@ -60,7 +60,7 @@ function BookingCard({ item, onPress }: { item: Booking; onPress: () => void }) 
 
 export default function Bookings() {
     const { user } = useContext(AuthContext);
-    const { data: bookings, isLoading, refetch, isFetching } = useGetBookingsForUser(user!.id);
+    const { data: bookings, isLoading, refetch, isFetching } = useGetBookingsForUser();
     const router = useRouter();
 
     if (isLoading) {
@@ -75,6 +75,9 @@ export default function Bookings() {
 
     return (
         <SafeAreaView className="flex-1">
+          <ThemedText className="text-2xl font-bold my-4 mx-4">
+                {`Hi ${user?.firstName}!`}
+            </ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">
                 Your upcoming rides
             </ThemedText>

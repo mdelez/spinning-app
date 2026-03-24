@@ -1,106 +1,163 @@
-import { getUserById } from "@/features/user/services/users.api";
+import { authClient } from "@/auth/auth.config";
 import { SplashScreen, useRouter } from "expo-router";
-import * as SecureStore from 'expo-secure-store';
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
-import { Role, User } from '../types/spinning.types.js';
+import { Alert } from "react-native";
+import { User } from '../types/spinning.types.js';
 
 SplashScreen.preventAutoHideAsync();
 
 type AuthState = {
     isReady: boolean;
     isLoggedIn: boolean;
+    isLoading: boolean;
     user: User | null;
-    logIn: (role: Role) => void;
+    logIn: (email: string, password: string) => void;
     logOut: () => void;
+    signUp: (
+        email: string,
+        firstName: string,
+        lastName: string,
+        shoeSize: number,
+        password: string,
+        passwordConfirm: string
+    ) => void;
 }
-
-const tokenKey = "access-token";
 
 export const AuthContext = createContext<AuthState>({
     isReady: false,
     isLoggedIn: false,
+    isLoading: false,
     user: null,
     logIn: () => { },
-    logOut: () => { }
+    logOut: () => { },
+    signUp: () => { }
 })
-
-const users: { role: Role, id: string }[] = [
-    {
-        role: 'USER',
-        id: '3a8d5f62-1e4c-4c9d-a7b1-6f3e9d5c3333'
-    },
-    {
-        role: 'INSTRUCTOR',
-        id: '9f4b2d73-8c6e-4c1f-9b5a-2a7d8e4f2222'
-    },
-    {
-        role: 'ADMIN',
-        id: '7c9a1e4f-5e1d-4b6a-b6e4-9c2c3f8a1111'
-    }
-]
 
 export function AuthProvider({ children }: PropsWithChildren) {
     const [isReady, setIsReady] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
 
-    const logIn = async (role: Role) => {
-        const found = users.find(u => u.role === role);
-        if (!found) return;
+    const isLoggedIn = !!user;
 
-        const fetchedUser = await getUserById(found.id);
+    const logIn = async (email: string, password: string) => {
+        setIsLoading(true);
+        try {
+            await authClient.signIn.email(
+                {
+                    email,
+                    password,
+                },
+                {
+                    onRequest: () => setIsLoading(true),
+                    onSuccess: (ctx) => {
+                        setIsLoading(false);
+                        const user = ctx.data?.user;
 
-        setUser(fetchedUser);
-        setIsLoggedIn(true);
+                        if (!user) {
+                            console.error("Login succeeded but no user returned", ctx);
 
-        const tokenData = {
-            id: found.id,
-            role,
-        };
+                            Alert.alert(
+                                "Login failed",
+                                "Something went wrong. Please try again."
+                            );
 
-        await SecureStore.setItemAsync(tokenKey, JSON.stringify(tokenData));
+                            return;
+                        }
 
-        router.replace("/");
+                        setUser(user as User);
+                        router.replace("/");
+                    },
+                    onError: (ctx) => {
+                        setIsLoading(false);
+                        Alert.alert("Login failed", ctx.error?.message || "Unknown error");
+                    },
+                }
+            );
+        } catch (err) {
+            setIsLoading(false);
+            console.error("Unexpected login error:", err);
+            Alert.alert("Login failed", "Unexpected error occurred");
+        }
     };
 
     const logOut = async () => {
-        setIsLoggedIn(false);
+        await authClient.signOut();
         setUser(null);
-        await SecureStore.deleteItemAsync(tokenKey);
         router.replace("/login");
+    };
+
+    const signUp = async (
+        email: string, 
+        firstName: string, 
+        lastName: string, 
+        shoeSize: number, 
+        password: string, 
+        passwordConfirm: string
+    ) => {
+        if (password !== passwordConfirm) {
+            Alert.alert("Error", "Passwords do not match");
+            return;
+        }
+
+        try {
+            await authClient.signUp.email(
+                {
+                    email,
+                    password,
+                    name: `${firstName} ${lastName}`,
+                    firstName,
+                    lastName,
+                    shoeSize,
+                    callbackURL: "spinningapp://auth/callback",
+                },
+                {
+                    onRequest: () => setIsLoading(true),
+                    onSuccess: (ctx) => {
+                        setIsLoading(false);
+                        const user = ctx.data?.user;
+
+                        if (!user) {
+                            console.error("Sign up succeeded but no user returned", ctx);
+
+                            Alert.alert(
+                                "Sign up failed",
+                                "Something went wrong. Please try again."
+                            );
+
+                            return;
+                        }
+
+                        setUser(user as User);
+                        router.replace("/");
+                    },
+                    onError: (ctx) => {
+                        setIsLoading(false);
+                        Alert.alert("Sign up failed", ctx.error?.message || "Unknown error");
+                    },
+                }
+            );
+        } catch (err) {
+            setIsLoading(false);
+            console.error("Unexpected sign up error", err);
+            Alert.alert("Sign up failed", "Unexpected error occurred");
+        }
     }
 
-    // TODO: restore user by calling endpoint with token info
+    // restore auth on app start
     useEffect(() => {
         const restoreAuth = async () => {
             try {
-                const token = await SecureStore.getItemAsync(tokenKey);
+                const session = await authClient.getSession();
 
-                if (!token) {
-                    setIsLoggedIn(false);
+                if (!session || !session.data?.user) {
                     setUser(null);
-                    return;
+                } else {
+                    setUser(session.data.user as User);
                 }
-
-                const parsed = JSON.parse(token);
-                const role = parsed.role as Role;
-
-                const found = users.find(u => u.role === role);
-                if (!found) {
-                    setIsLoggedIn(false);
-                    setUser(null);
-                    return;
-                }
-
-                const fetchedUser = await getUserById(found.id);
-
-                setUser(fetchedUser);
-                setIsLoggedIn(true);
-
-            } catch (error) {
-                console.log("Error restoring auth", error);
-                setIsLoggedIn(false);
+            } catch (err) {
+                console.log("Error restoring auth:", err);
                 setUser(null);
             } finally {
                 setIsReady(true);
@@ -114,11 +171,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
         if (isReady) {
             SplashScreen.hideAsync();
         }
-    }, [isReady])
+    }, [isReady]);
 
     return (
-        <AuthContext.Provider value={{ isReady, isLoggedIn, user, logIn, logOut }}>
+        <AuthContext.Provider value={{ isReady, isLoggedIn, isLoading, user, logIn, logOut, signUp }}>
             {children}
         </AuthContext.Provider>
-    )
+    );
 }
