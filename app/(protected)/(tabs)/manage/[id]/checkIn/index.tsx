@@ -30,7 +30,7 @@ export default function CheckIn() {
                 return (
                     <View key={booking.id} className={`flex-row justify-between items-center p-2 m-2 border rounded ${borderColor}`}>
                         <View>
-                            <ThemedText>{booking.user.firstName}</ThemedText>
+                            <ThemedText>{booking.user.firstName} {booking.user.lastName}</ThemedText>
                             <ThemedText>Bike: {booking.bike.bikeNumber}</ThemedText>
                         </View>
                         <Switch onValueChange={() => toggleCheckIn({ bookingId: booking.id })} value={!!booking.checkedIn} />

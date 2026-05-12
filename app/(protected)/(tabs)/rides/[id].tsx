@@ -8,7 +8,6 @@ export default function Details() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
     const { data, isLoading } = useGetRide(id);
-    // console.log(data);
 
     const start = new Date(data?.startAt ?? new Date());
     const end = new Date(data?.endAt ?? new Date());
