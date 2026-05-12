@@ -49,10 +49,18 @@ export type UpdateRideInput = Partial<{
     studioId?: string;
 }>
 
+export interface InstructorProfile {
+    id: string;
+    bio?: string;
+    spotifyLink?: string;
+    image?: string;
+}
+
 export interface Instructor {
     id: string;
     firstName: string;
     lastName: string;
+    instructorProfile?: InstructorProfile;
 }
 
 export interface Bike {
