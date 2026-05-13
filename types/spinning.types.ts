@@ -14,6 +14,7 @@ export interface User {
     shoeSize: number;
     createdAt: Date;
     updatedAt: Date;
+    instructorProfile?: InstructorProfile;
 }
 
 export interface Ride {
@@ -55,6 +56,15 @@ export interface InstructorProfile {
     spotifyLink?: string;
     image?: string;
 }
+
+export type UpdateUserInput = {
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: Date;
+    shoeSize?: number;
+    bio?: string;
+    spotifyLink?: string;
+};
 
 export interface Instructor {
     id: string;

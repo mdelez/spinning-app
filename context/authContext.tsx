@@ -1,4 +1,5 @@
 import { authClient } from "@/auth/auth.config";
+import { getMe } from "@/features/user/services/users.api";
 import { SplashScreen, useRouter } from "expo-router";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { Alert } from "react-native";
@@ -39,6 +40,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
 
+    useEffect(() => {
+        console.log('user CHANGED: ', user);
+    }, [user])
+
     const isLoggedIn = !!user;
 
     const logIn = async (email: string, password: string) => {
@@ -51,7 +56,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 },
                 {
                     onRequest: () => setIsLoading(true),
-                    onSuccess: (ctx) => {
+                    onSuccess: async (ctx) => {
                         setIsLoading(false);
                         const user = ctx.data?.user;
 
@@ -66,7 +71,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
                             return;
                         }
 
-                        setUser(user as User);
+                        try {
+                            const fullUser = await getMe();
+                            console.log('fullUser: ', fullUser);
+                            setUser(fullUser);
+                        } catch {
+                            setUser(user as User);
+                        }
                         router.replace("/");
                     },
                     onError: (ctx) => {
@@ -114,7 +125,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 },
                 {
                     onRequest: () => setIsLoading(true),
-                    onSuccess: (ctx) => {
+                    onSuccess: async (ctx) => {
                         setIsLoading(false);
                         const user = ctx.data?.user;
 
@@ -129,7 +140,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
                             return;
                         }
 
-                        setUser(user as User);
+                        try {
+                            const fullUser = await getMe();
+                            setUser(fullUser);
+                        } catch {
+                            setUser(user as User);
+                        }
                         router.replace("/");
                     },
                     onError: (ctx) => {
@@ -154,7 +170,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 if (!session || !session.data?.user) {
                     setUser(null);
                 } else {
-                    setUser(session.data.user as User);
+                    try {
+                        const fullUser = await getMe();
+                        setUser(fullUser);
+                    } catch {
+                        setUser(session.data.user as User);
+                    }
                 }
             } catch (err) {
                 console.log("Error restoring auth:", err);

@@ -1,6 +1,6 @@
-import { Instructor, User, UserRide } from "@/types/spinning.types";
+import { Instructor, UpdateUserInput, User, UserRide } from "@/types/spinning.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getInstructorBio, getInstructors, getUserById, getUserRides, updateUser } from "../services/users.api";
+import { getInstructor, getInstructors, getUserById, getUserRides, updateUser } from "../services/users.api";
 
 export function useGetUserById(id: string) {
   return useQuery<User>({
@@ -17,18 +17,18 @@ export function useGetInstructors() {
   })
 }
 
-export function useGetInstructorBio(id: string) {
+export function useGetInstructor(id: string) {
   return useQuery<Instructor>({
-    queryKey: ["instructor-bio", id],
-    queryFn: () => getInstructorBio(id),
+    queryKey: ["instructor", id],
+    queryFn: () => getInstructor(id),
     enabled: !!id,
   });
 }
 
-export function useUpdateInstructorBio() {
+export function useUpdateUser() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (bio: string) => updateUser(bio),
+    mutationFn: (input: UpdateUserInput) => updateUser(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["instructors"] });
     },
