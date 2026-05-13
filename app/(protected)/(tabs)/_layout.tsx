@@ -5,6 +5,7 @@ import { useContext } from "react";
 
 export default function BottomTabsLayout() {
   const { user } = useContext(AuthContext);
+  const isPrivileged = user?.role === "INSTRUCTOR" || user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
 
   return (
     <Tabs
@@ -41,10 +42,24 @@ export default function BottomTabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="instructors"
+        options={{
+          title: "Instructors",
+          href: !isPrivileged ? "/instructors" : null,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="numeric-3-box-outline"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="manage"
         options={{
           title: "Manage",
-          href: (user?.role === 'INSTRUCTOR' || user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") ? "/manage" : null,
+          href: isPrivileged ? "/manage" : null,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="numeric-3-box-outline"
@@ -60,7 +75,7 @@ export default function BottomTabsLayout() {
           title: "Account",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
-              name={(user?.role === 'INSTRUCTOR' || user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") ? "numeric-4-box-outline" : "numeric-3-box-outline"}
+              name="numeric-4-box-outline"
               size={size}
               color={color}
             />

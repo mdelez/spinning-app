@@ -1,4 +1,6 @@
 import { authClient } from "@/auth/auth.config";
+import { getMe } from "@/features/user/services/users.api";
+import { useQueryClient } from "@tanstack/react-query";
 import { SplashScreen, useRouter } from "expo-router";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { Alert } from "react-native";
@@ -38,62 +40,49 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const [isLoading, setIsLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const isLoggedIn = !!user;
 
     const logIn = async (email: string, password: string) => {
         setIsLoading(true);
-        try {
-            await authClient.signIn.email(
-                {
-                    email,
-                    password,
-                },
-                {
-                    onRequest: () => setIsLoading(true),
-                    onSuccess: (ctx) => {
-                        setIsLoading(false);
-                        const user = ctx.data?.user;
+        const { data, error } = await authClient.signIn.email({ email, password });
 
-                        if (!user) {
-                            console.error("Login succeeded but no user returned", ctx);
-
-                            Alert.alert(
-                                "Login failed",
-                                "Something went wrong. Please try again."
-                            );
-
-                            return;
-                        }
-
-                        setUser(user as User);
-                        router.replace("/");
-                    },
-                    onError: (ctx) => {
-                        setIsLoading(false);
-                        Alert.alert("Login failed", ctx.error?.message || "Unknown error");
-                    },
-                }
-            );
-        } catch (err) {
-            setIsLoading(false);
-            console.error("Unexpected login error:", err);
-            Alert.alert("Login failed", "Unexpected error occurred");
+        if (error) {
+            Alert.alert("Login failed", error.message || "Unknown error");
+            return;
         }
+
+        if (!data?.user) {
+            Alert.alert("Login failed", "Something went wrong. Please try again.");
+            return;
+        }
+
+        try {
+            const fullUser = await getMe();
+            setUser(fullUser);
+        } catch {
+            setUser(data.user as User);
+        }
+
+        setIsLoading(false);
+
+        router.replace("/");
     };
 
     const logOut = async () => {
         await authClient.signOut();
+        queryClient.clear();
         setUser(null);
         router.replace("/login");
     };
 
     const signUp = async (
-        email: string, 
-        firstName: string, 
-        lastName: string, 
-        shoeSize: number, 
-        password: string, 
+        email: string,
+        firstName: string,
+        lastName: string,
+        shoeSize: number,
+        password: string,
         passwordConfirm: string
     ) => {
         if (password !== passwordConfirm) {
@@ -101,48 +90,36 @@ export function AuthProvider({ children }: PropsWithChildren) {
             return;
         }
 
-        try {
-            await authClient.signUp.email(
-                {
-                    email,
-                    password,
-                    name: `${firstName} ${lastName}`,
-                    firstName,
-                    lastName,
-                    shoeSize,
-                    callbackURL: "spinningapp://auth/callback",
-                },
-                {
-                    onRequest: () => setIsLoading(true),
-                    onSuccess: (ctx) => {
-                        setIsLoading(false);
-                        const user = ctx.data?.user;
-
-                        if (!user) {
-                            console.error("Sign up succeeded but no user returned", ctx);
-
-                            Alert.alert(
-                                "Sign up failed",
-                                "Something went wrong. Please try again."
-                            );
-
-                            return;
-                        }
-
-                        setUser(user as User);
-                        router.replace("/");
-                    },
-                    onError: (ctx) => {
-                        setIsLoading(false);
-                        Alert.alert("Sign up failed", ctx.error?.message || "Unknown error");
-                    },
-                }
-            );
-        } catch (err) {
-            setIsLoading(false);
-            console.error("Unexpected sign up error", err);
-            Alert.alert("Sign up failed", "Unexpected error occurred");
+        setIsLoading(true);
+        const { data, error } = await authClient.signUp.email({
+            email,
+            password,
+            name: `${firstName} ${lastName}`,
+            firstName,
+            lastName,
+            shoeSize,
+            callbackURL: "spinningapp://auth/callback",
+        });
+        
+        if (error) {
+            Alert.alert("Sign up failed", error.message || "Unknown error");
+            return;
         }
+        
+        if (!data?.user) {
+            Alert.alert("Sign up failed", "Something went wrong. Please try again.");
+            return;
+        }
+        
+        try {
+            const fullUser = await getMe();
+            setUser(fullUser);
+        } catch {
+            setUser(data.user as User);
+        }
+        
+        setIsLoading(false);
+        router.replace("/");
     }
 
     // restore auth on app start
@@ -154,7 +131,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 if (!session || !session.data?.user) {
                     setUser(null);
                 } else {
-                    setUser(session.data.user as User);
+                    try {
+                        const fullUser = await getMe();
+                        setUser(fullUser);
+                    } catch {
+                        setUser(session.data.user as User);
+                    }
                 }
             } catch (err) {
                 console.log("Error restoring auth:", err);

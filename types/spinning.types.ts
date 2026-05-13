@@ -14,6 +14,7 @@ export interface User {
     shoeSize: number;
     createdAt: Date;
     updatedAt: Date;
+    instructorProfile?: InstructorProfile;
 }
 
 export interface Ride {
@@ -49,10 +50,27 @@ export type UpdateRideInput = Partial<{
     studioId?: string;
 }>
 
+export interface InstructorProfile {
+    id: string;
+    bio?: string;
+    spotifyLink?: string;
+    image?: string;
+}
+
+export type UpdateUserInput = {
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: Date;
+    shoeSize?: number;
+    bio?: string;
+    spotifyLink?: string;
+};
+
 export interface Instructor {
     id: string;
     firstName: string;
     lastName: string;
+    instructorProfile?: InstructorProfile;
 }
 
 export interface Bike {
