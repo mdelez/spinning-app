@@ -14,12 +14,10 @@ export async function getInstructor(id: string): Promise<Instructor> {
 }
 
 export async function getMe(): Promise<User> {
-    console.log('HELLO');
     return api("/users/me");
 }
 
 export async function updateUser(input: UpdateUserInput): Promise<void> {
-    console.log('input: ', input);
     return api("/users/me", {
         method: "PATCH",
         body: JSON.stringify(input),

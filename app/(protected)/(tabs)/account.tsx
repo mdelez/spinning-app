@@ -3,7 +3,6 @@ import { ThemedText } from "@/components/ThemedText";
 import { AuthContext } from "@/context/authContext";
 import { useUpdateUser } from "@/features/user/hooks/useUsers";
 import { useTheme } from "@react-navigation/native";
-import { useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { Alert, Button, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,7 +10,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Account() {
     const { colors } = useTheme();
     const authContext = useContext(AuthContext);
-    const queryClient = useQueryClient();
     const isInstructor = authContext.user?.role === "INSTRUCTOR";
 
     const [firstName, setFirstName] = useState("");
@@ -19,8 +17,6 @@ export default function Account() {
     const [shoeSize, setShoeSize] = useState("");
     const [bio, setBio] = useState("");
     const [spotifyLink, setSpotifyLink] = useState("");
-
-    console.log('USER: ', authContext.user);
 
     const { mutate: updateUser, isPending } = useUpdateUser();
 
@@ -34,7 +30,6 @@ export default function Account() {
 
     function logOut() {
         authContext.logOut();
-        queryClient.clear();
     }
 
     function handleSave() {
