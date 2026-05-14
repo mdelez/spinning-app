@@ -36,6 +36,9 @@ export function useCreateBooking() {
       queryClient.invalidateQueries({
         queryKey: ["bookings-user", data[0].userId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["ride-tokens-user"]
+      })
     },
   });
 }

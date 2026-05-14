@@ -159,3 +159,7 @@ export type UserRide =
             reservedUntil: string | null;
         };
     };
+
+export type RideTokens = {
+    balance: number;
+}
