@@ -144,7 +144,7 @@ export default function Bookings() {
                 renderItem={({ item }) => (
                     <RideCard
                         item={item}
-                        onPress={() => router.push(`/${item.rideId}`)}
+                        onPress={() => item.status === "BOOKED" && router.push(`/${item.booking.bookingId}`)}
                     />
                 )}
                 refreshing={isFetching}

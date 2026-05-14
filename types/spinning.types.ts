@@ -139,6 +139,7 @@ export type UserRide =
         studioName: string;
         status: "BOOKED";
         booking: {
+            bookingId: string;
             bikeNumber: number;
         };
         waitlist: null;
