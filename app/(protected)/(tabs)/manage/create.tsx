@@ -26,8 +26,7 @@ export default function CreateRide() {
         studioId: "",
         startAt: new Date(),
         endAt: new Date(),
-        rideType: "NORMAL",
-        tokenPrice: 1.0
+        rideType: "NORMAL"
     });
 
     const handleSave = async () => {

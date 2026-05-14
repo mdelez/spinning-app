@@ -38,7 +38,6 @@ export interface CreateRideInput {
     instructorId: string;
     studioId: string;
     rideType: RideType;
-    tokenPrice?: number;
 }
 
 export type UpdateRideInput = Partial<{
