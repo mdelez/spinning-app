@@ -24,7 +24,7 @@ export interface Ride {
     endAt: string;
     description?: string;
     rideType: RideType;
-    tokenPrice: number;
+    tokenPriceUnits: number;
     instructor: Instructor;
     studio: Studio;
     availableSpots: number;
@@ -38,7 +38,6 @@ export interface CreateRideInput {
     instructorId: string;
     studioId: string;
     rideType: RideType;
-    tokenPrice?: number;
 }
 
 export type UpdateRideInput = Partial<{
@@ -140,6 +139,7 @@ export type UserRide =
         studioName: string;
         status: "BOOKED";
         booking: {
+            bookingId: string;
             bikeNumber: number;
         };
         waitlist: null;
@@ -160,3 +160,7 @@ export type UserRide =
             reservedUntil: string | null;
         };
     };
+
+export type RideTokens = {
+    balance: number;
+}

@@ -36,6 +36,9 @@ export function useCreateBooking() {
       queryClient.invalidateQueries({
         queryKey: ["bookings-user", data[0].userId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["ride-tokens-user"]
+      })
     },
   });
 }
@@ -125,6 +128,7 @@ export function useDeleteBooking() {
     onSuccess: (_data, variables) => {
       const { userId } = variables;
       queryClient.invalidateQueries({ queryKey: ["bookings-user", userId] });
+      queryClient.invalidateQueries({ queryKey: ["ride-tokens-user"]});
     },
   });
 }
