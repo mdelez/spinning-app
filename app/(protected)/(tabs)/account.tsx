@@ -1,8 +1,8 @@
 import { ThemedTextInput } from "@/components/ThemedInput";
 import { ThemedText } from "@/components/ThemedText";
-import { AuthContext } from "@/context/authContext";
-import { useAddRideTokens, useGetRideTokensBalance } from "@/features/ride-tokens/hooks/useRideTokens";
-import { useUpdateUser } from "@/features/user/hooks/useUsers";
+import { AuthContext } from "@/context/AuthContext";
+import { useAddRideTokens, useGetRideTokensBalance } from "@/features/ride-tokens/hooks/use-ride-tokens";
+import { useUpdateUser } from "@/features/user/hooks/use-users";
 import { unitsToTokens } from "@/lib/ride-tokens";
 import { useTheme } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";

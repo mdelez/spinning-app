@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useGetRides } from "@/features/rides/hooks/useRides";
+import { useGetRides } from "@/features/rides/hooks/use-rides";
 import { Ride } from "@/types/spinning.types";
 import { useRouter } from "expo-router";
 import { FlatList, Pressable, useColorScheme, View } from "react-native";

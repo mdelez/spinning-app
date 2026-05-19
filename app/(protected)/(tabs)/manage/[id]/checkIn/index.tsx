@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useCheckInUser } from "@/features/bookings/hooks/useBookings";
-import { useGetRide, useGetRideBookings } from "@/features/rides/hooks/useRides";
+import { useCheckInUser } from "@/features/bookings/hooks/use-bookings";
+import { useGetRide, useGetRideBookings } from "@/features/rides/hooks/use-rides";
 import { useTheme } from "@react-navigation/native";
 import { useLocalSearchParams } from "expo-router";
 import { Switch, View } from "react-native";

@@ -1,6 +1,6 @@
 import { ThemedTextInput } from "@/components/ThemedInput";
 import { ThemedText } from "@/components/ThemedText";
-import { AuthContext } from "@/context/authContext";
+import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
 import { Pressable, View } from "react-native";

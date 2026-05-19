@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
-import { AuthContext } from "@/context/authContext";
-import { useGetUserRides } from "@/features/user/hooks/useUsers";
+import { AuthContext } from "@/context/AuthContext";
+import { useGetUserRides } from "@/features/user/hooks/use-users";
 import { UserRide } from "@/types/spinning.types";
 import { useRouter } from "expo-router";
 import { useContext } from "react";

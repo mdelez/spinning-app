@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useGetAvailableBikesForRide } from "@/features/rides/hooks/useRides";
+import { useGetAvailableBikesForRide } from "@/features/rides/hooks/use-rides";
 import { Picker } from '@react-native-picker/picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";

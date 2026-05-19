@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useGetInstructor } from "@/features/user/hooks/useUsers";
+import { useGetInstructor } from "@/features/user/hooks/use-users";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { Linking, Pressable, ScrollView, View } from "react-native";

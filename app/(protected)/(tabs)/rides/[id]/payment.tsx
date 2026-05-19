@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
-import { AuthContext } from "@/context/authContext";
-import { useCreateBooking } from "@/features/bookings/hooks/useBookings";
+import { AuthContext } from "@/context/AuthContext";
+import { useCreateBooking } from "@/features/bookings/hooks/use-bookings";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useContext } from "react";
 import { Button, View } from "react-native";
