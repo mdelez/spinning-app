@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useGetRide } from "@/features/rides/hooks/useRides";
+import { useGetRide } from "@/features/rides/hooks/use-rides";
 import { unitsToTokensText } from "@/lib/ride-tokens";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button } from "react-native";

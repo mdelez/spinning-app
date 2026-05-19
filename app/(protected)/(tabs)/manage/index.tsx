@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
-import { AuthContext } from "@/context/authContext";
-import { useGetRides } from "@/features/rides/hooks/useRides";
+import { AuthContext } from "@/context/AuthContext";
+import { useGetRides } from "@/features/rides/hooks/use-rides";
 import Feather from '@expo/vector-icons/Feather';
 import { Redirect, useRouter } from "expo-router";
 import { useContext } from "react";

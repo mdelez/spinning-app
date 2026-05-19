@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useDeleteBooking, useGetBookingById } from "@/features/bookings/hooks/useBookings";
+import { useDeleteBooking, useGetBookingById } from "@/features/bookings/hooks/use-bookings";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ActivityIndicator, Alert, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

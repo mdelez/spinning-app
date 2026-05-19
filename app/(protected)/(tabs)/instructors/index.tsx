@@ -1,5 +1,5 @@
 import { ThemedText } from "@/components/ThemedText";
-import { useGetInstructors } from "@/features/user/hooks/useUsers";
+import { useGetInstructors } from "@/features/user/hooks/use-users";
 import { Instructor } from "@/types/spinning.types";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";

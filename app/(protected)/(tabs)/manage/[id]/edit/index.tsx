@@ -1,9 +1,9 @@
 import { ThemedDateTimePicker } from "@/components/ThemedDatePicker";
 import { ThemedTextInput } from "@/components/ThemedInput";
 import { ThemedText } from "@/components/ThemedText";
-import { useDeleteRide, useGetRide, useUpdateRide } from "@/features/rides/hooks/useRides";
-import { useGetStudios } from "@/features/studios/hooks/useStudios";
-import { useGetInstructors } from "@/features/user/hooks/useUsers";
+import { useDeleteRide, useGetRide, useUpdateRide } from "@/features/rides/hooks/use-rides";
+import { useGetStudios } from "@/features/studios/hooks/use-studios";
+import { useGetInstructors } from "@/features/user/hooks/use-users";
 import { RideFormData, rideTypes } from "@/types/form.types";
 import { RideType } from "@/types/spinning.types";
 import { Picker } from "@react-native-picker/picker";

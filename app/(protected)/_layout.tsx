@@ -1,4 +1,4 @@
-import { AuthContext } from "@/context/authContext";
+import { AuthContext } from "@/context/AuthContext";
 import { Redirect, Stack } from "expo-router";
 import { useContext } from "react";
 
