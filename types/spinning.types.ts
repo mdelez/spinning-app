@@ -24,7 +24,7 @@ export interface Ride {
     endAt: string;
     description?: string;
     rideType: RideType;
-    tokenPrice: number;
+    tokenPriceUnits: number;
     instructor: Instructor;
     studio: Studio;
     availableSpots: number;

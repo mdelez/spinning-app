@@ -1,5 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { useGetRide } from "@/features/rides/hooks/useRides";
+import { unitsToTokensText } from "@/lib/ride-tokens";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,8 +10,24 @@ export default function Details() {
     const router = useRouter();
     const { data, isLoading } = useGetRide(id);
 
-    const start = new Date(data?.startAt ?? new Date());
-    const end = new Date(data?.endAt ?? new Date());
+    if (isLoading) {
+        return (
+            <SafeAreaView className="flex-1 justify-center items-center">
+                <ThemedText className="text-lg">Loading rides...</ThemedText>
+            </SafeAreaView>
+        );
+    }
+
+    if (!data) {
+        return (
+            <SafeAreaView className="flex-1 justify-center items-center">
+                <ThemedText className="text-lg">Ride not found.</ThemedText>
+            </SafeAreaView>
+        );
+    }
+
+    const start = new Date(data.startAt);
+    const end = new Date(data.endAt);
 
     const formattedDate = new Intl.DateTimeFormat("en-CH", {
         weekday: "long",
@@ -28,23 +45,16 @@ export default function Details() {
         minute: "2-digit",
     }).format(end);
 
-    if (isLoading) {
-        return (
-            <SafeAreaView className="flex-1 justify-center items-center">
-                <ThemedText className="text-lg">Loading rides...</ThemedText>
-            </SafeAreaView>
-        );
-    }
-
     return (
         <SafeAreaView className="flex-1">
             <ThemedText className="text-2xl font-bold my-4 mx-4">Date: {formattedDate}</ThemedText>
-            {data?.theme && (
-                <ThemedText className="text-2xl font-bold my-4 mx-4">Theme: {data?.theme}</ThemedText>
+            {data.theme && (
+                <ThemedText className="text-2xl font-bold my-4 mx-4">Theme: {data.theme}</ThemedText>
             )}
-            <ThemedText className="text-2xl font-bold my-4 mx-4">Instructor: {data?.instructor.firstName}</ThemedText>
+            <ThemedText className="text-2xl font-bold my-4 mx-4">Instructor: {data.instructor.firstName}</ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">Start time: {formattedStartTime}</ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">End time: {formattedEndTime}</ThemedText>
+            <ThemedText className="text-2xl font-bold my-4 mx-4">Price: {unitsToTokensText(data.tokenPriceUnits)}</ThemedText>
             <Button
                 title="Book now"
                 onPress={() => router.push(`/rides/${id}/book`)}

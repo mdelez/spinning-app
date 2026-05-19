@@ -1,6 +1,6 @@
 import { RideTokens } from "@/types/spinning.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addRideTokens, getRideTokensBalance } from "../api/rideTokens.api";
+import { addRideTokens, getRideTokensBalance } from "../api/ride-tokens.api";
 
 export function useGetRideTokensBalance() {
     return useQuery<RideTokens>({

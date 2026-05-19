@@ -3,6 +3,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { AuthContext } from "@/context/authContext";
 import { useAddRideTokens, useGetRideTokensBalance } from "@/features/ride-tokens/hooks/useRideTokens";
 import { useUpdateUser } from "@/features/user/hooks/useUsers";
+import { unitsToTokens } from "@/lib/ride-tokens";
 import { useTheme } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
 import { Alert, Button, Keyboard, TouchableWithoutFeedback, View } from "react-native";
@@ -68,7 +69,7 @@ export default function Account() {
             <SafeAreaView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
                 <ThemedText className="text-2xl font-bold mb-6">Account</ThemedText>
                 <View className="flex-row justify-between">
-                    <ThemedText className="text-2xl font-bold mb-6">Ride tokens: {rideTokensBalance?.balance}</ThemedText>
+                    <ThemedText className="text-2xl font-bold mb-6">Ride tokens: {rideTokensBalance != null ? unitsToTokens(rideTokensBalance.balance) : "—"}</ThemedText>
                     <Button title="Add tokens" onPress={handleAddTokens}/>
                 </View>
 

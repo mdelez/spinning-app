@@ -47,7 +47,7 @@ export default function EditRide() {
                 startAt: new Date(data.startAt),
                 endAt: new Date(data.endAt),
                 rideType: data.rideType,
-                tokenPrice: data.tokenPrice
+                tokenPrice: data.tokenPriceUnits
             });
         }
     }, [data]);
