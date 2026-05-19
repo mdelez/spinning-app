@@ -49,9 +49,12 @@ export default function Rides() {
                     <ThemedText className="font-semibold text-lg">
                         {item.theme ? item.theme : "Ride"}
                     </ThemedText>
-                    <ThemedText className="font-semibold text-lg">
+                    {item.availableSpots > 0 && <ThemedText className="font-semibold text-lg">
                         Spots left: {item.availableSpots}
-                    </ThemedText>
+                    </ThemedText>}
+                    {item.availableSpots <= 0 && <ThemedText className="font-semibold text-lg">
+                        Join the waitlist now!
+                    </ThemedText>}
                 </View>
                 <View className="flex-row justify-between mt-2 px-4">
                     <ThemedText className="text-sm">

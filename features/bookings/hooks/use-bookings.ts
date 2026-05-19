@@ -1,7 +1,7 @@
 import { Booking } from "@/types/spinning.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as SecureStore from 'expo-secure-store';
-import { checkInUserByBookingId, createBooking, deleteBooking, getBookingById, getBookingsForUser, getBookingsForUserById } from "../services/bookings.api";
+import { checkInUserByBookingId, createBooking, deleteBooking, getBookingById, getBookingsForUser, getBookingsForUserById, joinWaitlist, leaveWaitlist } from "../services/bookings.api";
 
 export function useGetBookingById(id: string) {
   return useQuery<Booking>({
@@ -99,6 +99,30 @@ export function useCheckInUser(rideId: string) {
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
+    },
+  });
+}
+
+export function useJoinWaitlist() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: joinWaitlist,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-rides-me"] });
+      queryClient.invalidateQueries({ queryKey: ["ride-tokens-user"] });
+    },
+  });
+}
+
+export function useLeaveWaitlist() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ rideId }: { rideId: string }) => leaveWaitlist(rideId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-rides-me"] });
+      queryClient.invalidateQueries({ queryKey: ["ride-tokens-user"] });
     },
   });
 }

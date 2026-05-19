@@ -164,3 +164,8 @@ export type UserRide =
 export type RideTokens = {
     balance: number;
 }
+
+export type JoinWaitlistInput = {
+    rideId: string;
+    autoBook: boolean;
+}

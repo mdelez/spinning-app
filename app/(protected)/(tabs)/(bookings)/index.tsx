@@ -144,7 +144,13 @@ export default function Bookings() {
                 renderItem={({ item }) => (
                     <RideCard
                         item={item}
-                        onPress={() => item.status === "BOOKED" && router.push(`/${item.booking.bookingId}`)}
+                        onPress={() => {
+                            if (item.status === "BOOKED") {
+                                router.push(`/${item.booking.bookingId}`);
+                            } else if (item.status === "WAITLISTED") {
+                                router.push(`/waitlist/${item.rideId}?position=${item.waitlist.position ?? ""}&status=${item.waitlist.status}`);
+                            }
+                        }}
                     />
                 )}
                 refreshing={isFetching}
