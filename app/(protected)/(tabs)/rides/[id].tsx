@@ -1,14 +1,18 @@
 import { ThemedText } from "@/components/ThemedText";
+import { useJoinWaitlist } from "@/features/bookings/hooks/use-bookings";
 import { useGetRide } from "@/features/rides/hooks/use-rides";
 import { unitsToTokensText } from "@/lib/ride-tokens";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Button } from "react-native";
+import { useState } from "react";
+import { Button, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Details() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
     const { data, isLoading } = useGetRide(id);
+    const { mutate: joinWaitlist, isPending } = useJoinWaitlist();
+    const [autoBook, setAutoBook] = useState<boolean>(false);
 
     if (isLoading) {
         return (
@@ -55,10 +59,33 @@ export default function Details() {
             <ThemedText className="text-2xl font-bold my-4 mx-4">Start time: {formattedStartTime}</ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">End time: {formattedEndTime}</ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">Price: {unitsToTokensText(data.tokenPriceUnits)}</ThemedText>
-            <Button
-                title="Book now"
-                onPress={() => router.push(`/rides/${id}/book`)}
-            />
+            {data.availableSpots > 0 &&
+                <Button
+                    title="Book now"
+                    onPress={() => router.push(`/rides/${id}/book`)}
+                />
+            }
+            {data.availableSpots <= 0 &&
+                <View>
+                    <View className="flex-row items-center">
+                        <ThemedText className="text-2xl font-bold my-4 mx-4">Auto book</ThemedText>
+                        <Switch value={autoBook} onValueChange={() => setAutoBook((prev) => !prev)} />
+                    </View>
+                    <Button
+                        title="Join waitlist"
+                        disabled={isPending}
+                        onPress={() => {
+                            joinWaitlist(
+                                {
+                                    rideId: data.id,
+                                    autoBook
+                                },
+                                { onSuccess: () => router.back() }
+                            );
+                        }}
+                    />
+                </View>
+            }
         </SafeAreaView>
     );
 }

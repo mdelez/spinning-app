@@ -1,5 +1,5 @@
 import { api } from "@/lib/api";
-import { Booking, CreateBookingInput, UpdateBookingInput } from "@/types/spinning.types";
+import { Booking, CreateBookingInput, JoinWaitlistInput, UpdateBookingInput } from "@/types/spinning.types";
 
 export async function getBookings(): Promise<Booking[]> {
     return api("/bookings");
@@ -40,6 +40,19 @@ export async function checkInUserByBookingId(id: string): Promise<Booking> {
 
 export async function deleteBooking(id: string): Promise<void> {
     return api(`/bookings/${id}`, {
+        method: 'DELETE'
+    })
+}
+
+export async function joinWaitlist(joinWaitlistData: JoinWaitlistInput): Promise<void> {
+    return api(`/rides/${joinWaitlistData.rideId}/waitlist`, {
+        method: 'POST',
+        body: JSON.stringify(joinWaitlistData)
+    })
+}
+
+export async function leaveWaitlist(rideId: string): Promise<void> {
+    return api(`/rides/${rideId}/waitlist`, {
         method: 'DELETE'
     })
 }
