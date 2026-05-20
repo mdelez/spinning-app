@@ -33,12 +33,9 @@ export function useCreateBooking() {
     mutationFn: createBooking,
     onSuccess: (data) => {
       // invalidate bookings for that user
-      queryClient.invalidateQueries({
-        queryKey: ["bookings-user", data[0].userId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["ride-tokens-user"]
-      })
+      queryClient.invalidateQueries({ queryKey: ["bookings-user", data[0].userId] });
+      queryClient.invalidateQueries({ queryKey: ["ride-tokens-user"] });
+      queryClient.invalidateQueries({ queryKey: ["user-rides-me"] });
     },
   });
 }
@@ -153,6 +150,7 @@ export function useDeleteBooking() {
       const { userId } = variables;
       queryClient.invalidateQueries({ queryKey: ["bookings-user", userId] });
       queryClient.invalidateQueries({ queryKey: ["ride-tokens-user"]});
+      queryClient.invalidateQueries({ queryKey: ["user-rides-me"] });
     },
   });
 }

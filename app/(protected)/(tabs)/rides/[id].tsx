@@ -59,10 +59,6 @@ export default function Details() {
             <ThemedText className="text-2xl font-bold my-4 mx-4">Start time: {formattedStartTime}</ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">End time: {formattedEndTime}</ThemedText>
             <ThemedText className="text-2xl font-bold my-4 mx-4">Price: {unitsToTokensText(data.tokenPriceUnits)}</ThemedText>
-            <View className="flex-row items-center">
-                <ThemedText className="text-2xl font-bold my-4 mx-4">Auto book</ThemedText>
-                <Switch value={autoBook} onValueChange={() => setAutoBook((prev) => !prev)} />
-            </View>
             {data.availableSpots > 0 &&
                 <Button
                     title="Book now"
@@ -70,19 +66,25 @@ export default function Details() {
                 />
             }
             {data.availableSpots <= 0 &&
-                <Button
-                    title="Join waitlist"
-                    disabled={isPending}
-                    onPress={() => {
-                        joinWaitlist(
-                            {
-                                rideId: data.id,
-                                autoBook
-                            },
-                            { onSuccess: () => router.back() }
-                        );
-                    }}
-                />
+                <View>
+                    <View className="flex-row items-center">
+                        <ThemedText className="text-2xl font-bold my-4 mx-4">Auto book</ThemedText>
+                        <Switch value={autoBook} onValueChange={() => setAutoBook((prev) => !prev)} />
+                    </View>
+                    <Button
+                        title="Join waitlist"
+                        disabled={isPending}
+                        onPress={() => {
+                            joinWaitlist(
+                                {
+                                    rideId: data.id,
+                                    autoBook
+                                },
+                                { onSuccess: () => router.back() }
+                            );
+                        }}
+                    />
+                </View>
             }
         </SafeAreaView>
     );
